@@ -318,7 +318,14 @@
         el.className = 'floating-name';
         el.textContent = name;
         // vị trí ngang ngẫu nhiên (giữ trong 8%-92% để không sát lề)
-        const left = 8 + Math.random() * 84;
+        const screenWidth = window.innerWidth;
+        const elementWidth = 80; // ví dụ phần tử rộng 80px
+        const minLeft = 0.08 * screenWidth; // 8%
+        const maxLeft = screenWidth - elementWidth - minLeft; // trừ bớt phần tử
+        const left = minLeft + Math.random() * (maxLeft - minLeft);
+// áp dụng vào phần tử
+        element.style.left = `${left}px`;
+
         el.style.left = left + 'vw';
         // font-size ngẫu nhiên cho độ nổi bật
         el.style.fontSize = (18 + Math.random() * 14) + 'px';
