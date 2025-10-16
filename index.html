@@ -20,9 +20,10 @@
 
         h1 {
             color: #c2185b;
-            font-size: 2em;
+            font-size: clamp(1.2em, 4vw, 1.8em);
             margin-bottom: 20px;
             text-align: center;
+            padding: 0 10px;
         }
 
         /* --- PHẦN MÃ QR --- */
@@ -32,11 +33,14 @@
             align-items: center;
             animation: fadeIn 1.5s ease;
             z-index: 30;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
         }
 
         #qr-section img {
-            width: 200px;
-            height: 200px;
+            width: clamp(150px, 40vw, 200px);
+            height: clamp(150px, 40vw, 200px);
             border: 4px solid #c2185b;
             border-radius: 12px;
             padding: 10px;
@@ -48,13 +52,14 @@
         button {
             background-color: #c2185b;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: clamp(14px, 3.5vw, 16px);
             cursor: pointer;
             transition: 0.3s;
             z-index: 30;
+            min-width: 120px;
         }
 
         button:hover {
@@ -68,11 +73,14 @@
             align-items: center;
             animation: fadeIn 1.5s ease;
             z-index: 30;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
         }
 
         #reader {
-            width: 250px;
-            height: 250px;
+            width: clamp(200px, 50vw, 250px);
+            height: clamp(200px, 50vw, 250px);
             margin-top: 20px;
             border: 3px dashed #c2185b;
             border-radius: 12px;
@@ -90,19 +98,22 @@
             text-align: center;
             animation: fadeIn 1.5s ease;
             overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .greeting-header {
             position: relative;
             z-index: 40;
             margin-top: 40px;
+            margin-bottom: 20px;
         }
 
         .greeting-text {
-            font-size: 1.4em;
+            font-size: clamp(1.1em, 3.5vw, 1.4em);
             color: #c2185b;
             line-height: 1.6em;
-            max-width: 700px;
+            max-width: min(90vw, 700px);
             background: rgba(255,255,255,0.9);
             padding: 18px;
             border-radius: 14px;
@@ -110,14 +121,14 @@
             margin-top: 20px;
             animation: slideUp 1s ease;
             z-index: 40;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        /* Floating names */
+        /* Floating names - ĐÃ CHỈNH SỬA */
         .floating-name {
-            position: absolute;
+            position: fixed;
             bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
             color: #c2185b;
             font-weight: 700;
             pointer-events: none;
@@ -125,6 +136,11 @@
             text-shadow: 0 1px 0 rgba(255,255,255,0.6);
             z-index: 45;
             user-select: none;
+            /* Giới hạn kích thước chữ */
+            font-size: clamp(12px, 3vw, 24px);
+            max-width: 85vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         @keyframes floatUp {
@@ -133,16 +149,21 @@
             100% { transform: translateY(-130vh) scale(1.05); opacity: 0; }
         }
 
-        /* Background names (phủ nền) */
+        /* Background names (phủ nền) - ĐÃ CHỈNH SỬA */
         .bg-name {
-            position: absolute;
-            color: rgba(194,24,91,0.08); /* mờ để làm nền */
+            position: fixed;
+            color: rgba(194,24,91,0.08);
             font-weight: 700;
             pointer-events: none;
             user-select: none;
             transform-origin: center;
             z-index: 20;
             white-space: nowrap;
+            /* Giới hạn kích thước chữ */
+            font-size: clamp(8px, 2vw, 28px);
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         @keyframes fadeInScale {
@@ -174,17 +195,42 @@
             position: fixed;
             bottom: 0;
             color: #ff4d6d;
-            font-size: 20px;
+            font-size: clamp(12px, 4vw, 20px);
             animation: heartFloat 4s linear infinite;
+            z-index: 10;
         }
 
-        /* đảm bảo overlay chữ nền không che nội dung chính */
+        /* Đảm bảo overlay chữ nền không che nội dung chính */
         .overlay-center {
             position: relative;
             z-index: 40;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            max-width: 90vw;
+        }
+
+        /* Responsive cho màn hình nhỏ */
+        @media (max-width: 480px) {
+            #qr-section, #scan-section {
+                padding: 15px;
+            }
+
+            .greeting-text {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .floating-name {
+                font-size: clamp(10px, 2.5vw, 18px);
+                max-width: 80vw;
+            }
+
+            .bg-name {
+                font-size: clamp(6px, 1.5vw, 20px);
+                max-width: 85vw;
+            }
         }
     </style>
 </head>
@@ -239,7 +285,7 @@
         'Phạm Thị Mỹ Tuyền'
     ];
 
-    // --- QR setup (nếu bạn đã dùng qr hiện tại, có thể giữ nguyên) ---
+    // --- QR setup ---
     function createShareQr() {
         const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
         const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(shareUrl) + '&size=200x200';
@@ -263,7 +309,7 @@
         startScan();
     });
 
-    // --- html5-qrcode (giữ nguyên) ---
+    // --- html5-qrcode ---
     function startScan() {
         html5QrCode = new Html5Qrcode("reader");
         Html5Qrcode.getCameras().then(devices => {
@@ -306,10 +352,9 @@
             setTimeout(() => spawnFloating(name), i * 600);
         });
 
-        // Sau khi tất cả tên bay xong (khoảng names.length * 600 + extra),
-        // tạo background phủ kín
+        // Sau khi tất cả tên bay xong, tạo background phủ kín
         setTimeout(() => {
-            fillBackgroundWithNames(names, 140); // số lượng bg-name, chỉnh nếu cần
+            fillBackgroundWithNames(names, 80); // Giảm số lượng cho mobile
         }, names.length * 600 + 1200);
     }
 
@@ -317,19 +362,28 @@
         const el = document.createElement('div');
         el.className = 'floating-name';
         el.textContent = name;
-        // vị trí ngang ngẫu nhiên (giữ trong 8%-92% để không sát lề)
-        const left = 8 + Math.random() * 84;
+
+        // Tính toán vị trí an toàn cho mobile
+        const screenWidth = window.innerWidth;
+        const margin = Math.min(20, screenWidth * 0.05); // 5% màn hình hoặc 20px
+        const maxLeft = (screenWidth - margin * 2) / screenWidth * 100 - 5; // trừ thêm 5% cho padding
+
+        // Vị trí ngang ngẫu nhiên trong vùng an toàn
+        const left = margin / screenWidth * 100 + Math.random() * (maxLeft - margin / screenWidth * 100);
         el.style.left = left + 'vw';
-        // font-size ngẫu nhiên cho độ nổi bật
-        el.style.fontSize = (18 + Math.random() * 14) + 'px';
-        // thời gian bay khác nhau
+
+        // Font size responsive
+        const baseFontSize = Math.min(24, window.innerWidth * 0.06); // 6% màn hình, max 24px
+        el.style.fontSize = (baseFontSize * (0.8 + Math.random() * 0.4)) + 'px';
+
+        // Thời gian bay khác nhau
         const duration = 3 + Math.random() * 3; // 3 - 6s
         el.style.animation = `floatUp ${duration}s ease-in forwards`;
         greetingSection.appendChild(el);
 
         // Khi animation kết thúc, chuyển tên đó thành "phủ nền" nhỏ mờ
         el.addEventListener('animationend', () => {
-            // tạo một bg-name (tĩnh, mờ) ở vị trí cuối của el
+            // tạo một bg-name ở vị trí cuối của el
             createBgName(name, left);
             // xóa tên bay để tiết kiệm DOM
             el.remove();
@@ -340,12 +394,28 @@
         const bg = document.createElement('div');
         bg.className = 'bg-name';
         bg.textContent = name;
-        // phân bố chiều dọc ngẫu nhiên
-        const top = 8 + Math.random() * 84;
-        bg.style.left = leftVw + (Math.random() * 6 - 3) + 'vw';
-        bg.style.top = top + 'vh';
-        bg.style.fontSize = (10 + Math.random() * 28) + 'px';
-        // xoay nhẹ random
+
+        // Phân bố chiều dọc ngẫu nhiên, tránh phần nội dung chính
+        const contentHeight = 300; // Ước lượng chiều cao nội dung chính
+        const screenHeight = window.innerHeight;
+        let top;
+
+        if (Math.random() < 0.3) {
+            // 30% cơ hội ở phần trên (trên nội dung)
+            top = Math.random() * (contentHeight * 0.7);
+        } else {
+            // 70% cơ hội ở phần dưới
+            top = contentHeight + Math.random() * (screenHeight - contentHeight - 50);
+        }
+
+        bg.style.left = (leftVw + (Math.random() * 6 - 3)) + 'vw';
+        bg.style.top = (top / screenHeight * 100) + 'vh';
+
+        // Font size nhỏ hơn cho background
+        const bgFontSize = Math.min(20, window.innerWidth * 0.04);
+        bg.style.fontSize = (bgFontSize * (0.5 + Math.random() * 0.8)) + 'px';
+
+        // Xoay nhẹ random
         const rot = (Math.random() * 40 - 20) + 'deg';
         bg.style.setProperty('--rot', rot);
         bg.style.transform = `rotate(${rot})`;
@@ -354,47 +424,80 @@
         greetingSection.appendChild(bg);
     }
 
-    function fillBackgroundWithNames(names, count = 1000) {
-        // Tạo nhiều bg-name rải đều để "phủ kín"
+    function fillBackgroundWithNames(names, count = 80) {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const margin = Math.min(15, screenWidth * 0.03);
+        const contentHeight = 300;
+
+        // Tạo nhiều bg-name rải đều để "phủ kín" nhưng không quá dày
         for (let i = 0; i < count; i++) {
             const name = names[Math.floor(Math.random() * names.length)];
             const bg = document.createElement('div');
             bg.className = 'bg-name';
             bg.textContent = name;
-            bg.style.left = Math.random() * 100 + 'vw';
-            bg.style.top = Math.random() * 100 + 'vh';
-            bg.style.fontSize = (8 + Math.random() * 34) + 'px';
+
+            // Vị trí an toàn
+            const left = margin + Math.random() * (screenWidth - margin * 2);
+            let top;
+
+            if (Math.random() < 0.25) {
+                top = Math.random() * (contentHeight * 0.6);
+            } else {
+                top = contentHeight + Math.random() * (screenHeight - contentHeight - margin);
+            }
+
+            bg.style.left = (left / screenWidth * 100) + 'vw';
+            bg.style.top = (top / screenHeight * 100) + 'vh';
+
+            // Font size nhỏ
+            const fontSize = Math.min(18, screenWidth * 0.035);
+            bg.style.fontSize = (fontSize * (0.4 + Math.random() * 0.6)) + 'px';
+
             const rot = (Math.random() * 80 - 40) + 'deg';
             bg.style.setProperty('--rot', rot + 'deg');
             bg.style.transform = `rotate(${rot}deg)`;
             bg.style.opacity = (0.03 + Math.random() * 0.12).toString();
-            // một số sẽ nhẹ di chuyển chậm để tạo động
-            if (Math.random() < 0.15) {
-                // animate subtle float
+
+            // Một số sẽ nhẹ di chuyển chậm để tạo động
+            if (Math.random() < 0.1) { // Giảm tần suất cho mobile
                 const floatDur = 6 + Math.random() * 8;
                 bg.style.transition = `transform ${floatDur}s ease-in-out`;
-                // slight translateY oscillation by toggling translate after a timeout
                 setTimeout(() => {
-                    bg.style.transform = `translateY(${(Math.random() * 6 - 3)}px) rotate(${rot}deg)`;
+                    bg.style.transform = `translateY(${(Math.random() * 4 - 2)}px) rotate(${rot}deg)`;
                 }, 100 + Math.random() * 1000);
             }
+
             greetingSection.appendChild(bg);
         }
 
         // Gradually darken/make nền tên nhiều hơn: tạo thêm một lớp nhẹ sau vài giây
         setTimeout(() => {
-            for (let j = 0; j < 60; j++) {
+            for (let j = 0; j < 30; j++) { // Giảm số lượng
                 const name = names[Math.floor(Math.random() * names.length)];
                 const bg = document.createElement('div');
                 bg.className = 'bg-name';
                 bg.textContent = name;
-                bg.style.left = Math.random() * 100 + 'vw';
-                bg.style.top = Math.random() * 100 + 'vh';
-                bg.style.fontSize = (6 + Math.random() * 30) + 'px';
+
+                const left = margin + Math.random() * (screenWidth - margin * 2);
+                let top;
+
+                if (Math.random() < 0.2) {
+                    top = Math.random() * (contentHeight * 0.5);
+                } else {
+                    top = contentHeight + Math.random() * (screenHeight - contentHeight - margin);
+                }
+
+                bg.style.left = (left / screenWidth * 100) + 'vw';
+                bg.style.top = (top / screenHeight * 100) + 'vh';
+
+                const fontSize = Math.min(15, screenWidth * 0.03);
+                bg.style.fontSize = (fontSize * (0.3 + Math.random() * 0.5)) + 'px';
+
                 const rot = (Math.random() * 80 - 40) + 'deg';
                 bg.style.setProperty('--rot', rot + 'deg');
                 bg.style.transform = `rotate(${rot}deg)`;
-                bg.style.opacity = (0.03 + Math.random() * 0.12).toString();
+                bg.style.opacity = (0.02 + Math.random() * 0.08).toString();
                 greetingSection.appendChild(bg);
             }
         }, 1200);
@@ -406,11 +509,12 @@
             heart.classList.add("heart");
             heart.innerHTML = "❤";
             heart.style.left = Math.random() * 100 + "vw";
-            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            const heartSize = Math.min(20, window.innerWidth * 0.05);
+            heart.style.fontSize = (heartSize * (0.5 + Math.random() * 0.8)) + "px";
             heart.style.animationDuration = Math.random() * 2 + 3 + "s";
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 5000);
-        }, 500);
+        }, 800); // Tăng interval cho mobile
     }
 
     // Khởi tạo QR khi load
