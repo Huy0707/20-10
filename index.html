@@ -112,9 +112,9 @@
             z-index: 40;
         }
 
-        /* Floating names - BAY LÊN CHẬM */
+        /* TÊN BAY LIÊN TỤC - GIỐNG TRÁI TIM */
         .floating-name {
-            position: absolute;
+            position: fixed;
             bottom: -60px;
             color: #c2185b;
             font-weight: 700;
@@ -132,27 +132,6 @@
             0% { transform: translateY(0) scale(1); opacity: 1; }
             70% { opacity: 1; }
             100% { transform: translateY(-130vh) scale(1.05); opacity: 0; }
-        }
-
-        /* FIXED NAMES - DỪNG LẠI Ở VỊ TRÍ CUỐI */
-        .fixed-name {
-            position: fixed !important;
-            color: #c2185b;
-            font-weight: 700;
-            pointer-events: none;
-            white-space: nowrap;
-            max-width: 85vw;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.6);
-            z-index: 35;
-            user-select: none;
-            opacity: 0.7; /* Nhẹ mờ để phân biệt với tên bay */
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 0.7; transform: scale(1); }
         }
 
         @keyframes fadeIn {
@@ -187,7 +166,7 @@
         }
 
         @media (max-width: 480px) {
-            .floating-name, .fixed-name {
+            .floating-name {
                 max-width: 88vw !important;
             }
         }
@@ -219,7 +198,7 @@
     </div>
 </div>
 
-<!-- JS: QUÉT QR + TÊN BAY LÊN + FIXED -->
+<!-- JS: QUÉT QR + TÊN BAY LIÊN TỤC -->
 <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 <script>
     const qrSection = document.getElementById('qr-section');
@@ -290,20 +269,18 @@
 
     function showGreeting() {
         greetingSection.style.display = 'flex';
-        createFloatingNames(NAMES);
         createHearts();
+        // ✅ TÊN BAY LIÊN TỤC - GIỐNG TRÁI TIM
+        setInterval(() => spawnFloatingName(), 800); // MỚI TÊN CẢ 800ms
     }
 
-    function createFloatingNames(names) {
-        names.forEach((name, i) => {
-            setTimeout(() => spawnFloating(name), i * 900);
-        });
-    }
+    // ✅ SPAWN TÊN BAY - LIÊN TỤC KHÔNG DỪNG
+    function spawnFloatingName() {
+        const randomName = NAMES[Math.floor(Math.random() * NAMES.length)];
 
-    function spawnFloating(name) {
         const el = document.createElement('div');
         el.className = 'floating-name';
-        el.textContent = name;
+        el.textContent = randomName;
 
         // FIT MÀN HÌNH MOBILE
         const screenWidth = window.innerWidth;
@@ -316,7 +293,7 @@
         tempSpan.style.fontWeight = '700';
         tempSpan.style.position = 'absolute';
         tempSpan.style.visibility = 'hidden';
-        tempSpan.textContent = name;
+        tempSpan.textContent = randomName;
         document.body.appendChild(tempSpan);
 
         let fontSize = Math.min(18 + Math.random() * 14, maxFontSize);
@@ -335,27 +312,13 @@
         el.style.left = left + 'vw';
         el.style.fontSize = fontSize + 'px';
 
+        // THỜI GIAN BAY CHẬM (4.5-9s)
         const duration = 4.5 + Math.random() * 4.5;
         el.style.animation = `floatUp ${duration}s ease-in forwards`;
-        greetingSection.appendChild(el);
+        document.body.appendChild(el); // THÊM VÀO BODY thay vì greetingSection
 
-        // ✅ KHI KẾT THÚC → CHUYỂN THÀNH FIXED NAME
-        el.addEventListener('animationend', () => {
-            createFixedName(name, left, fontSize);
-            el.remove();
-        });
-    }
-
-    // ✅ TÊN FIXED Ở VỊ TRÍ CUỐI
-    function createFixedName(name, leftVw, fontSize) {
-        const fixedEl = document.createElement('div');
-        fixedEl.className = 'fixed-name';
-        fixedEl.textContent = name;
-        fixedEl.style.left = leftVw + 'vw';
-        fixedEl.style.top = '20vh'; // Dừng ở 1/5 màn hình từ trên
-        fixedEl.style.fontSize = fontSize + 'px';
-        fixedEl.style.animation = 'fadeInScale 0.8s ease forwards';
-        greetingSection.appendChild(fixedEl);
+        // TỰ ĐỘNG XÓA SAU KHI BAY XONG
+        setTimeout(() => el.remove(), duration * 1000);
     }
 
     function createHearts() {
