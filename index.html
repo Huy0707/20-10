@@ -20,7 +20,7 @@
 
         h1 {
             color: #c2185b;
-            font-size: clamp(1.2em, 5vw, 2em);
+            font-size: 2em;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -32,12 +32,11 @@
             align-items: center;
             animation: fadeIn 1.5s ease;
             z-index: 30;
-            padding: 20px;
         }
 
         #qr-section img {
-            width: clamp(150px, 40vw, 200px);
-            height: clamp(150px, 40vw, 200px);
+            width: 200px;
+            height: 200px;
             border: 4px solid #c2185b;
             border-radius: 12px;
             padding: 10px;
@@ -52,7 +51,7 @@
             padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-size: clamp(14px, 4vw, 16px);
+            font-size: 16px;
             cursor: pointer;
             transition: 0.3s;
             z-index: 30;
@@ -69,12 +68,11 @@
             align-items: center;
             animation: fadeIn 1.5s ease;
             z-index: 30;
-            padding: 20px;
         }
 
         #reader {
-            width: clamp(200px, 70vw, 250px);
-            height: clamp(200px, 70vw, 250px);
+            width: 250px;
+            height: 250px;
             margin-top: 20px;
             border: 3px dashed #c2185b;
             border-radius: 12px;
@@ -92,24 +90,21 @@
             text-align: center;
             animation: fadeIn 1.5s ease;
             overflow: hidden;
-            padding: 20px;
-            box-sizing: border-box;
         }
 
         .greeting-header {
             position: relative;
             z-index: 40;
-            margin-top: clamp(20px, 8vh, 40px);
+            margin-top: 40px;
         }
 
         .greeting-text {
-            font-size: clamp(1em, 4vw, 1.4em);
+            font-size: 1.4em;
             color: #c2185b;
             line-height: 1.6em;
-            max-width: 90vw;
-            max-width: min(700px, 90vw);
+            max-width: 700px;
             background: rgba(255,255,255,0.9);
-            padding: clamp(12px, 4vw, 18px);
+            padding: 18px;
             border-radius: 14px;
             box-shadow: 0 0 20px rgba(0,0,0,0.08);
             margin-top: 20px;
@@ -117,12 +112,12 @@
             z-index: 40;
         }
 
-        /* Floating names - GIỚI HẠN TRONG MÀN HÌNH */
+        /* Floating names - CHẬM HƠN 50% */
         .floating-name {
             position: absolute;
             bottom: -60px;
-            /* GIỚI HẠN: 5% - 95% viewport */
-            left: clamp(5vw, var(--left-pos), 95vw);
+            left: 50%;
+            transform: translateX(-50%);
             color: #c2185b;
             font-weight: 700;
             pointer-events: none;
@@ -130,39 +125,24 @@
             text-shadow: 0 1px 0 rgba(255,255,255,0.6);
             z-index: 45;
             user-select: none;
-            /* FONT-SIZE RESPONSIVE */
-            font-size: clamp(12px, 4vw, 24px);
-            /* Đảm bảo không bị cắt */
-            transform: translateX(-50%);
-            max-width: 90vw;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         @keyframes floatUp {
-            0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
             70% { opacity: 1; }
-            100% { transform: translateX(-50%) translateY(-130vh) scale(1.05); opacity: 0; }
+            100% { transform: translateY(-130vh) scale(1.05); opacity: 0; }
         }
 
-        /* Background names - GIỚI HẠN TRONG MÀN HÌNH */
+        /* Background names (phủ nền) - MỜ HƠN + NHIỀU HƠN */
         .bg-name {
             position: absolute;
-            color: rgba(194,24,91,0.08);
+            color: rgba(194,24,91,0.12); /* TĂNG độ mờ từ 0.08 lên 0.12 */
             font-weight: 700;
             pointer-events: none;
             user-select: none;
             transform-origin: center;
             z-index: 20;
             white-space: nowrap;
-            /* GIỚI HẠN: 2% - 98% viewport */
-            left: clamp(2vw, var(--left-pos), 98vw);
-            top: clamp(2vh, var(--top-pos), 98vh);
-            /* FONT-SIZE NHỎ HƠN CHO MOBILE */
-            font-size: clamp(6px, 2.5vw, 20px);
-            max-width: 90vw;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         @keyframes fadeInScale {
@@ -194,9 +174,8 @@
             position: fixed;
             bottom: 0;
             color: #ff4d6d;
-            font-size: clamp(12px, 4vw, 20px);
+            font-size: 20px;
             animation: heartFloat 4s linear infinite;
-            left: clamp(5vw, var(--heart-left), 95vw);
         }
 
         /* đảm bảo overlay chữ nền không che nội dung chính */
@@ -206,25 +185,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
-        }
-
-        /* RESPONSIVE CHO MOBILE */
-        @media (max-width: 480px) {
-            .floating-name {
-                font-size: clamp(10px, 3.5vw, 18px);
-                max-width: 85vw;
-            }
-
-            .bg-name {
-                font-size: clamp(5px, 2vw, 16px);
-                max-width: 85vw;
-            }
-
-            .greeting-text {
-                padding: 12px;
-                margin: 10px;
-            }
         }
     </style>
 </head>
@@ -279,7 +239,7 @@
         'Phạm Thị Mỹ Tuyền'
     ];
 
-    // --- QR setup ---
+    // --- QR setup (nếu bạn đã dùng qr hiện tại, có thể giữ nguyên) ---
     function createShareQr() {
         const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
         const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(shareUrl) + '&size=200x200';
@@ -303,7 +263,7 @@
         startScan();
     });
 
-    // --- html5-qrcode ---
+    // --- html5-qrcode (giữ nguyên) ---
     function startScan() {
         html5QrCode = new Html5Qrcode("reader");
         Html5Qrcode.getCameras().then(devices => {
@@ -334,35 +294,44 @@
     // --- EFFECT: tên bay lên dần và sau đó phủ nền ---
     function showGreeting() {
         greetingSection.style.display = 'flex';
+        // Bắt đầu trình diễn tên
         createFloatingNames(NAMES);
+        // Thêm hearts nếu cần
         createHearts();
     }
 
     function createFloatingNames(names) {
+        // spawn từng tên với khoảng delay CHẬM HƠN (từ 600ms lên 900ms)
         names.forEach((name, i) => {
-            setTimeout(() => spawnFloating(name), i * 600);
+            setTimeout(() => spawnFloating(name), i * 900);
         });
 
+        // Sau khi tất cả tên bay xong (tăng delay tương ứng),
+        // tạo background phủ kín
         setTimeout(() => {
-            fillBackgroundWithNames(names, 100); // GIẢM SỐ LƯỢNG CHO MOBILE
-        }, names.length * 600 + 1200);
+            fillBackgroundWithNames(names, 300); // TĂNG từ 140 lên 300
+        }, names.length * 900 + 1800); // Tăng delay từ 1200 lên 1800
     }
 
     function spawnFloating(name) {
         const el = document.createElement('div');
         el.className = 'floating-name';
         el.textContent = name;
-
-        // GIỚI HẠN 5% - 95% viewport width
-        const left = 5 + Math.random() * 90;
-        el.style.setProperty('--left-pos', left + 'vw');
-
-        const duration = 3 + Math.random() * 3;
+        // vị trí ngang ngẫu nhiên (giữ trong 8%-92% để không sát lề)
+        const left = 8 + Math.random() * 84;
+        el.style.left = left + 'vw';
+        // font-size ngẫu nhiên cho độ nổi bật
+        el.style.fontSize = (18 + Math.random() * 14) + 'px';
+        // thời gian bay CHẬM HƠN 50% (từ 3-6s lên 4.5-9s)
+        const duration = 4.5 + Math.random() * 4.5; // 4.5 - 9s
         el.style.animation = `floatUp ${duration}s ease-in forwards`;
         greetingSection.appendChild(el);
 
+        // Khi animation kết thúc, chuyển tên đó thành "phủ nền" nhỏ mờ
         el.addEventListener('animationend', () => {
+            // tạo một bg-name (tĩnh, mờ) ở vị trí cuối của el
             createBgName(name, left);
+            // xóa tên bay để tiết kiệm DOM
             el.remove();
         });
     }
@@ -371,73 +340,71 @@
         const bg = document.createElement('div');
         bg.className = 'bg-name';
         bg.textContent = name;
-
-        // GIỚI HẠN 2% - 98% viewport
-        const top = 2 + Math.random() * 96;
-        const leftOffset = (Math.random() * 6 - 3);
-        bg.style.setProperty('--left-pos', (leftVw + leftOffset) + 'vw');
-        bg.style.setProperty('--top-pos', top + 'vh');
-
-        bg.style.fontSize = (6 + Math.random() * 20) + 'px';
+        // phân bố chiều dọc ngẫu nhiên
+        const top = 8 + Math.random() * 84;
+        bg.style.left = leftVw + (Math.random() * 6 - 3) + 'vw';
+        bg.style.top = top + 'vh';
+        bg.style.fontSize = (10 + Math.random() * 28) + 'px';
+        // xoay nhẹ random
         const rot = (Math.random() * 40 - 20) + 'deg';
         bg.style.setProperty('--rot', rot);
         bg.style.transform = `rotate(${rot})`;
-        bg.style.opacity = (0.06 + Math.random() * 0.12).toString();
+        // TĂNG độ mờ từ 0.06-0.18 lên 0.08-0.20
+        bg.style.opacity = (0.08 + Math.random() * 0.12).toString();
         bg.style.animation = `fadeInScale 0.8s ease forwards`;
         greetingSection.appendChild(bg);
     }
 
-    function fillBackgroundWithNames(names, count = 100) {
-        // GIẢM SỐ LƯỢNG CHO PERFORMANCE TRÊN MOBILE
-        const mobileCount = window.innerWidth < 768 ? Math.min(count, 60) : count;
+    function fillBackgroundWithNames(names, count = 300) {
+        // Tạo NHIỀU bg-name hơn + trùng lặp nhiều hơn để "phủ kín"
+        for (let i = 0; i < count; i++) {
+            // TĂNG TỶ LỆ TRÙNG LẶP: 70% dùng tên random, 30% dùng tên cố định (trùng nhiều)
+            const name = Math.random() < 0.7
+                ? names[Math.floor(Math.random() * names.length)]
+                : NAMES[Math.floor(Math.random() * 3)]; // Chỉ dùng 3 tên đầu để trùng nhiều
 
-        for (let i = 0; i < mobileCount; i++) {
-            const name = names[Math.floor(Math.random() * names.length)];
             const bg = document.createElement('div');
             bg.className = 'bg-name';
             bg.textContent = name;
-
-            // GIỚI HẠN 2% - 98% viewport
-            const left = 2 + Math.random() * 96;
-            const top = 2 + Math.random() * 96;
-            bg.style.setProperty('--left-pos', left + 'vw');
-            bg.style.setProperty('--top-pos', top + 'vh');
-
-            bg.style.fontSize = (5 + Math.random() * 18) + 'px';
+            bg.style.left = Math.random() * 100 + 'vw';
+            bg.style.top = Math.random() * 100 + 'vh';
+            bg.style.fontSize = (8 + Math.random() * 34) + 'px';
             const rot = (Math.random() * 80 - 40) + 'deg';
-            bg.style.setProperty('--rot', rot);
-            bg.style.transform = `rotate(${rot})`;
-            bg.style.opacity = (0.03 + Math.random() * 0.12).toString();
+            bg.style.setProperty('--rot', rot + 'deg');
+            bg.style.transform = `rotate(${rot}deg)`;
+            // TĂNG độ mờ từ 0.03-0.15 lên 0.05-0.18
+            bg.style.opacity = (0.05 + Math.random() * 0.13).toString();
 
-            if (Math.random() < 0.1) {
+            // một số sẽ nhẹ di chuyển chậm để tạo động
+            if (Math.random() < 0.15) {
                 const floatDur = 6 + Math.random() * 8;
                 bg.style.transition = `transform ${floatDur}s ease-in-out`;
                 setTimeout(() => {
-                    bg.style.transform = `translateY(${(Math.random() * 4 - 2)}px) rotate(${rot})`;
+                    bg.style.transform = `translateY(${(Math.random() * 6 - 3)}px) rotate(${rot}deg)`;
                 }, 100 + Math.random() * 1000);
             }
             greetingSection.appendChild(bg);
         }
 
-        // THÊM LỚP NỀN NHẸ
+        // Gradually darken/make nền tên NHIỀU HƠN: TĂNG từ 60 lên 120
         setTimeout(() => {
-            const extraCount = window.innerWidth < 768 ? 30 : 60;
-            for (let j = 0; j < extraCount; j++) {
-                const name = names[Math.floor(Math.random() * names.length)];
+            for (let j = 0; j < 120; j++) {
+                // TĂNG TRÙNG LẶP: 50% dùng tên random, 50% dùng tên cố định
+                const name = Math.random() < 0.5
+                    ? names[Math.floor(Math.random() * names.length)]
+                    : NAMES[Math.floor(Math.random() * 3)]; // Chỉ dùng 3 tên đầu
+
                 const bg = document.createElement('div');
                 bg.className = 'bg-name';
                 bg.textContent = name;
-
-                const left = 2 + Math.random() * 96;
-                const top = 2 + Math.random() * 96;
-                bg.style.setProperty('--left-pos', left + 'vw');
-                bg.style.setProperty('--top-pos', top + 'vh');
-
-                bg.style.fontSize = (4 + Math.random() * 16) + 'px';
+                bg.style.left = Math.random() * 100 + 'vw';
+                bg.style.top = Math.random() * 100 + 'vh';
+                bg.style.fontSize = (6 + Math.random() * 30) + 'px';
                 const rot = (Math.random() * 80 - 40) + 'deg';
-                bg.style.setProperty('--rot', rot);
-                bg.style.transform = `rotate(${rot})`;
-                bg.style.opacity = (0.02 + Math.random() * 0.08).toString();
+                bg.style.setProperty('--rot', rot + 'deg');
+                bg.style.transform = `rotate(${rot}deg)`;
+                // TĂNG độ mờ từ 0.03-0.15 lên 0.04-0.16
+                bg.style.opacity = (0.04 + Math.random() * 0.12).toString();
                 greetingSection.appendChild(bg);
             }
         }, 1200);
@@ -448,20 +415,17 @@
             const heart = document.createElement("div");
             heart.classList.add("heart");
             heart.innerHTML = "❤";
-
-            // GIỚI HẠN 5% - 95% viewport
-            const left = 5 + Math.random() * 90;
-            heart.style.setProperty('--heart-left', left + 'vw');
-
-            heart.style.fontSize = (10 + Math.random() * 15) + "px";
-            heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 5000);
-        }, 800); // TĂNG INTERVAL CHO MOBILE
+        }, 500);
     }
 
-    // Khởi tạo
+    // Khởi tạo QR khi load
     createShareQr();
+    // Nếu trang mở với ?q=loichuc
     checkQueryShowGreeting();
 </script>
 </body>
