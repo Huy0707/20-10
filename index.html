@@ -126,7 +126,8 @@
 <!-- PHẦN 1: MÃ QR -->
 <div id="qr-section">
     <h1>🌸 Quét mã QR để nhận lời chúc 20/10 🌸</h1>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=loichuc&size=200x200" alt="QR Code">
+    <!-- ảnh QR sẽ được JS tạo dựa trên URL hiện tại + ?q=loichuc -->
+    <img id="qrImage" alt="QR Code">
     <button id="startBtn">Bắt đầu quét</button>
 </div>
 
@@ -154,7 +155,29 @@
     const greetingSection = document.getElementById('greeting-section');
     const startBtn = document.getElementById('startBtn');
     const readerDiv = document.getElementById('reader');
+    const qrImage = document.getElementById('qrImage');
     let html5QrCode;
+
+    // Tạo QR động chứa URL hiện tại + ?q=loichuc
+    function createShareQr() {
+        // Dùng origin + pathname để tạo URL đầy đủ cho trang.
+        // Khi trang được deploy (ví dụ GitHub Pages), origin là domain chính xác.
+        const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
+        const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(shareUrl) + '&size=200x200';
+        qrImage.src = qrApi;
+        qrImage.alt = 'QR mở ' + shareUrl;
+    }
+
+    // Nếu trang được mở với ?q=loichuc thì hiển thị lời chúc
+    function checkQueryShowGreeting() {
+        const params = new URLSearchParams(window.location.search);
+        if ((params.get('q') || '').trim().toLowerCase() === 'loichuc') {
+            // Ẩn phần QR/scan nếu muốn
+            qrSection.style.display = 'none';
+            scanSection.style.display = 'none';
+            showGreeting();
+        }
+    }
 
     startBtn.addEventListener('click', () => {
         qrSection.style.display = 'none';
@@ -170,17 +193,27 @@
                     devices[0].id,
                     { fps: 10, qrbox: 200 },
                     (decodedText) => {
-                        if (decodedText === "loichuc") {
+                        // debug: log decoded
+                        console.log('decoded:', decodedText);
+                        const text = (decodedText || '').trim().toLowerCase();
+                        if (text === "loichuc" || text === window.location.origin + window.location.pathname + '?q=loichuc') {
                             html5QrCode.stop().then(() => {
+                                scanSection.style.display = 'none';
+                                showGreeting();
+                            }).catch(err => {
+                                // nếu lỗi khi stop thì vẫn show greeting
+                                console.warn(err);
                                 scanSection.style.display = 'none';
                                 showGreeting();
                             });
                         }
                     },
-                    () => {}
-                );
+                    (errorMessage) => {
+                        // optional: console log scan failures
+                    }
+                ).catch(err => console.error('Start camera failed:', err));
             }
-        }).catch(err => console.log(err));
+        }).catch(err => console.log('getCameras error:', err));
     }
 
     function showGreeting() {
@@ -200,6 +233,12 @@
             setTimeout(() => heart.remove(), 5000);
         }, 300);
     }
+
+    // Khởi tạo QR khi load
+    createShareQr();
+    // Nếu trang mở với ?q=loichuc (ví dụ khi user quét QR bằng camera mặc định và mở link),
+    // ta tự động hiện lời chúc
+    checkQueryShowGreeting();
 </script>
 </body>
 </html>
