@@ -198,12 +198,13 @@
         }
 
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <!-- PHẦN 1: MÃ QR -->
 <div id="qr-section">
     <h1>🌸 Quét mã QR để nhận lời chúc 20/10 🌸</h1>
-    <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?data=loichuc&size=200x200" alt="QR Code">
+    <div id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?data=loichuc&size=200x200" alt="QR Code"></div>
     <button id="startBtn">Bắt đầu quét</button>
 </div>
 
@@ -253,17 +254,21 @@
     ];
 
     // --- QR setup (nếu bạn đã dùng qr hiện tại, có thể giữ nguyên) ---
-    function createShareQr() {
-        const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
-        let urlToEncode = shareUrl;
+    function createShareQrClient() {
+        let shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
         if (!window.location.origin || window.location.origin === 'null') {
-            urlToEncode = 'https://Huy0707.github.io/20-10/?q=loichuc';
+            shareUrl = 'https://Huy0707.github.io/20-10/?q=loichuc';
         }
-        const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(urlToEncode) + '&size=200x200&t=' + Date.now();
-        qrImage.src = qrApi;
-        qrImage.alt = 'QR mở ' + urlToEncode;
+        qrImage.innerHTML = ''; // xoá qr cũ
+        new QRCode(qrImage, {
+            text: shareUrl,
+            width: 200,
+            height: 200,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
     }
-
     // Nếu trang được mở với ?q=loichuc thì hiển thị lời chúc
     function checkQueryShowGreeting() {
         const params = new URLSearchParams(window.location.search);
