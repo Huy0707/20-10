@@ -112,16 +112,18 @@
             z-index: 40;
         }
 
-        /* Floating names - CHẬM HƠN 50% */
+        /* Floating names - FIT MÀN HÌNH MOBILE */
         .floating-name {
             position: absolute;
             bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
             color: #c2185b;
             font-weight: 700;
             pointer-events: none;
+            /* THÊM: fit màn hình */
             white-space: nowrap;
+            max-width: 85vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
             text-shadow: 0 1px 0 rgba(255,255,255,0.6);
             z-index: 45;
             user-select: none;
@@ -133,16 +135,20 @@
             100% { transform: translateY(-130vh) scale(1.05); opacity: 0; }
         }
 
-        /* Background names (phủ nền) - MỜ HƠN + NHIỀU HƠN */
+        /* Background names - ĐẬM HƠN, ĐỌC ĐƯỢC 3M */
         .bg-name {
             position: absolute;
-            color: rgba(194,24,91,0.12); /* TĂNG độ mờ từ 0.08 lên 0.12 */
+            color: rgba(194,24,91,0.35); /* TĂNG từ 0.12 lên 0.35 - ĐẬM RẤT NHIỀU */
             font-weight: 700;
             pointer-events: none;
             user-select: none;
             transform-origin: center;
             z-index: 20;
             white-space: nowrap;
+            /* THÊM: tối ưu font cho mobile */
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         @keyframes fadeInScale {
@@ -185,6 +191,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 480px) {
+            .floating-name, .bg-name {
+                max-width: 88vw !important;
+            }
         }
     </style>
 </head>
@@ -239,7 +252,7 @@
         'Phạm Thị Mỹ Tuyền'
     ];
 
-    // --- QR setup (nếu bạn đã dùng qr hiện tại, có thể giữ nguyên) ---
+    // --- QR setup ---
     function createShareQr() {
         const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
         const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(shareUrl) + '&size=200x200';
@@ -263,10 +276,10 @@
         startScan();
     });
 
-    // --- html5-qrcode (giữ nguyên) ---
+    // --- html5-qrcode ---
     function startScan() {
         html5QrCode = new Html5Qrcode("reader");
-        Html5Qrcode.getCameras().then(devices => {
+        Html5QrCode.getCameras().then(devices => {
             if (devices && devices.length) {
                 html5QrCode.start(
                     devices[0].id,
@@ -294,44 +307,64 @@
     // --- EFFECT: tên bay lên dần và sau đó phủ nền ---
     function showGreeting() {
         greetingSection.style.display = 'flex';
-        // Bắt đầu trình diễn tên
         createFloatingNames(NAMES);
-        // Thêm hearts nếu cần
         createHearts();
     }
 
     function createFloatingNames(names) {
-        // spawn từng tên với khoảng delay CHẬM HƠN (từ 600ms lên 900ms)
         names.forEach((name, i) => {
             setTimeout(() => spawnFloating(name), i * 900);
         });
 
-        // Sau khi tất cả tên bay xong (tăng delay tương ứng),
-        // tạo background phủ kín
         setTimeout(() => {
-            fillBackgroundWithNames(names, 300); // TĂNG từ 140 lên 300
-        }, names.length * 900 + 1800); // Tăng delay từ 1200 lên 1800
+            fillBackgroundWithNames(names, 300);
+        }, names.length * 900 + 1800);
     }
 
     function spawnFloating(name) {
         const el = document.createElement('div');
         el.className = 'floating-name';
         el.textContent = name;
-        // vị trí ngang ngẫu nhiên (giữ trong 8%-92% để không sát lề)
-        const left = 8 + Math.random() * 84;
+
+        // ✅ FIT MÀN HÌNH MOBILE - TÍNH TOÁN VỊ TRÍ AN TOÀN
+        const screenWidth = window.innerWidth;
+        const safeMargin = Math.min(15, screenWidth * 0.08); // 8% hoặc 15px
+        const maxTextWidth = screenWidth - safeMargin * 2;
+        const maxFontSize = Math.min(28, screenWidth * 0.08);
+
+        // Đo độ dài text để điều chỉnh font-size
+        const tempSpan = document.createElement('span');
+        tempSpan.style.fontFamily = 'Poppins';
+        tempSpan.style.fontWeight = '700';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.textContent = name;
+        document.body.appendChild(tempSpan);
+
+        let fontSize = Math.min(18 + Math.random() * 14, maxFontSize);
+        tempSpan.style.fontSize = fontSize + 'px';
+        let textWidth = tempSpan.offsetWidth;
+
+        // Giảm font-size nếu text quá dài
+        while (textWidth > maxTextWidth && fontSize > 12) {
+            fontSize -= 2;
+            tempSpan.style.fontSize = fontSize + 'px';
+            textWidth = tempSpan.offsetWidth;
+        }
+
+        document.body.removeChild(tempSpan);
+
+        // Vị trí left an toàn
+        const left = safeMargin + Math.random() * (100 - (safeMargin * 2 / screenWidth * 100));
         el.style.left = left + 'vw';
-        // font-size ngẫu nhiên cho độ nổi bật
-        el.style.fontSize = (18 + Math.random() * 14) + 'px';
-        // thời gian bay CHẬM HƠN 50% (từ 3-6s lên 4.5-9s)
-        const duration = 4.5 + Math.random() * 4.5; // 4.5 - 9s
+        el.style.fontSize = fontSize + 'px';
+
+        const duration = 4.5 + Math.random() * 4.5;
         el.style.animation = `floatUp ${duration}s ease-in forwards`;
         greetingSection.appendChild(el);
 
-        // Khi animation kết thúc, chuyển tên đó thành "phủ nền" nhỏ mờ
         el.addEventListener('animationend', () => {
-            // tạo một bg-name (tĩnh, mờ) ở vị trí cuối của el
             createBgName(name, left);
-            // xóa tên bay để tiết kiệm DOM
             el.remove();
         });
     }
@@ -340,42 +373,89 @@
         const bg = document.createElement('div');
         bg.className = 'bg-name';
         bg.textContent = name;
-        // phân bố chiều dọc ngẫu nhiên
+
+        // ✅ FIT MÀN HÌNH CHO BG NAMES
+        const screenWidth = window.innerWidth;
+        const safeMargin = Math.min(12, screenWidth * 0.06);
+        const maxBgFontSize = Math.min(32, screenWidth * 0.07);
+
+        const tempSpan = document.createElement('span');
+        tempSpan.style.fontFamily = 'Poppins';
+        tempSpan.style.fontWeight = '700';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.textContent = name;
+        document.body.appendChild(tempSpan);
+
+        let bgFontSize = Math.min(10 + Math.random() * 28, maxBgFontSize);
+        tempSpan.style.fontSize = bgFontSize + 'px';
+        let textWidth = tempSpan.offsetWidth;
+
+        while (textWidth > (screenWidth - safeMargin * 2) && bgFontSize > 8) {
+            bgFontSize -= 1;
+            tempSpan.style.fontSize = bgFontSize + 'px';
+            textWidth = tempSpan.offsetWidth;
+        }
+
+        document.body.removeChild(tempSpan);
+
         const top = 8 + Math.random() * 84;
-        bg.style.left = leftVw + (Math.random() * 6 - 3) + 'vw';
+        bg.style.left = (leftVw + (Math.random() * 6 - 3)) + 'vw';
         bg.style.top = top + 'vh';
-        bg.style.fontSize = (10 + Math.random() * 28) + 'px';
-        // xoay nhẹ random
+        bg.style.fontSize = bgFontSize + 'px';
+
         const rot = (Math.random() * 40 - 20) + 'deg';
         bg.style.setProperty('--rot', rot);
         bg.style.transform = `rotate(${rot})`;
-        // TĂNG độ mờ từ 0.06-0.18 lên 0.08-0.20
-        bg.style.opacity = (0.08 + Math.random() * 0.12).toString();
+        bg.style.opacity = (0.25 + Math.random() * 0.15).toString(); // 0.25-0.40
         bg.style.animation = `fadeInScale 0.8s ease forwards`;
         greetingSection.appendChild(bg);
     }
 
     function fillBackgroundWithNames(names, count = 300) {
-        // Tạo NHIỀU bg-name hơn + trùng lặp nhiều hơn để "phủ kín"
+        const screenWidth = window.innerWidth;
+        const safeMargin = Math.min(10, screenWidth * 0.05);
+        const maxBgFontSize = Math.min(34, screenWidth * 0.075);
+
+        const tempSpan = document.createElement('span');
+        tempSpan.style.fontFamily = 'Poppins';
+        tempSpan.style.fontWeight = '700';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.visibility = 'hidden';
+        document.body.appendChild(tempSpan);
+
         for (let i = 0; i < count; i++) {
-            // TĂNG TỶ LỆ TRÙNG LẶP: 70% dùng tên random, 30% dùng tên cố định (trùng nhiều)
             const name = Math.random() < 0.7
                 ? names[Math.floor(Math.random() * names.length)]
-                : NAMES[Math.floor(Math.random() * 3)]; // Chỉ dùng 3 tên đầu để trùng nhiều
+                : NAMES[Math.floor(Math.random() * 3)];
 
             const bg = document.createElement('div');
             bg.className = 'bg-name';
             bg.textContent = name;
-            bg.style.left = Math.random() * 100 + 'vw';
+
+            // Tính font-size fit màn hình
+            let fontSize = Math.min(8 + Math.random() * 34, maxBgFontSize);
+            tempSpan.style.fontSize = fontSize + 'px';
+            tempSpan.textContent = name;
+            let textWidth = tempSpan.offsetWidth;
+
+            while (textWidth > (screenWidth - safeMargin * 2) && fontSize > 6) {
+                fontSize -= 1;
+                tempSpan.style.fontSize = fontSize + 'px';
+                textWidth = tempSpan.offsetWidth;
+            }
+
+            // Vị trí an toàn
+            const left = safeMargin + Math.random() * (screenWidth - safeMargin * 2);
+            bg.style.left = (left / screenWidth * 100) + 'vw';
             bg.style.top = Math.random() * 100 + 'vh';
-            bg.style.fontSize = (8 + Math.random() * 34) + 'px';
+            bg.style.fontSize = fontSize + 'px';
+
             const rot = (Math.random() * 80 - 40) + 'deg';
             bg.style.setProperty('--rot', rot + 'deg');
             bg.style.transform = `rotate(${rot}deg)`;
-            // TĂNG độ mờ từ 0.03-0.15 lên 0.05-0.18
-            bg.style.opacity = (0.05 + Math.random() * 0.13).toString();
+            bg.style.opacity = (0.30 + Math.random() * 0.15).toString(); // 0.30-0.45
 
-            // một số sẽ nhẹ di chuyển chậm để tạo động
             if (Math.random() < 0.15) {
                 const floatDur = 6 + Math.random() * 8;
                 bg.style.transition = `transform ${floatDur}s ease-in-out`;
@@ -385,26 +465,38 @@
             }
             greetingSection.appendChild(bg);
         }
+        document.body.removeChild(tempSpan);
 
-        // Gradually darken/make nền tên NHIỀU HƠN: TĂNG từ 60 lên 120
+        // Layer 2 - CŨNG ĐẬM
         setTimeout(() => {
             for (let j = 0; j < 120; j++) {
-                // TĂNG TRÙNG LẶP: 50% dùng tên random, 50% dùng tên cố định
                 const name = Math.random() < 0.5
                     ? names[Math.floor(Math.random() * names.length)]
-                    : NAMES[Math.floor(Math.random() * 3)]; // Chỉ dùng 3 tên đầu
+                    : NAMES[Math.floor(Math.random() * 3)];
 
                 const bg = document.createElement('div');
                 bg.className = 'bg-name';
                 bg.textContent = name;
+
+                let fontSize = Math.min(6 + Math.random() * 30, maxBgFontSize);
+                tempSpan.style.fontSize = fontSize + 'px';
+                tempSpan.textContent = name;
+                let textWidth = tempSpan.offsetWidth;
+
+                while (textWidth > (screenWidth - safeMargin * 2) && fontSize > 5) {
+                    fontSize -= 1;
+                    tempSpan.style.fontSize = fontSize + 'px';
+                    textWidth = tempSpan.offsetWidth;
+                }
+
                 bg.style.left = Math.random() * 100 + 'vw';
                 bg.style.top = Math.random() * 100 + 'vh';
-                bg.style.fontSize = (6 + Math.random() * 30) + 'px';
+                bg.style.fontSize = fontSize + 'px';
+
                 const rot = (Math.random() * 80 - 40) + 'deg';
                 bg.style.setProperty('--rot', rot + 'deg');
                 bg.style.transform = `rotate(${rot}deg)`;
-                // TĂNG độ mờ từ 0.03-0.15 lên 0.04-0.16
-                bg.style.opacity = (0.04 + Math.random() * 0.12).toString();
+                bg.style.opacity = (0.28 + Math.random() * 0.12).toString(); // 0.28-0.40
                 greetingSection.appendChild(bg);
             }
         }, 1200);
@@ -425,7 +517,6 @@
 
     // Khởi tạo QR khi load
     createShareQr();
-    // Nếu trang mở với ?q=loichuc
     checkQueryShowGreeting();
 </script>
 </body>
