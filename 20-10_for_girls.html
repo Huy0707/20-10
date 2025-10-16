@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Chúc 20-10</title>
+    <style>
+        /* --- RESET + BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #f7c1c1, #f7e1e1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #c2185b;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* --- PHẦN MÃ QR --- */
+        #qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        #qr-section img {
+            width: 200px;
+            height: 200px;
+            border: 4px solid #c2185b;
+            border-radius: 12px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #c2185b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #a3154d;
+        }
+
+        /* --- PHẦN CAMERA QUÉT --- */
+        #scan-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        #reader {
+            width: 250px;
+            height: 250px;
+            margin-top: 20px;
+            border: 3px dashed #c2185b;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.7);
+        }
+
+        /* --- PHẦN LỜI CHÚC --- */
+        #greeting-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .greeting-text {
+            font-size: 1.4em;
+            color: #c2185b;
+            line-height: 1.6em;
+            max-width: 600px;
+            background: rgba(255,255,255,0.8);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            animation: slideUp 2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(80px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heartFloat {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-800px) scale(0.8); opacity: 0; }
+        }
+
+        .heart {
+            position: fixed;
+            bottom: 0;
+            color: #ff4d6d;
+            font-size: 20px;
+            animation: heartFloat 4s linear infinite;
+        }
+    </style>
+</head>
+<body>
+<!-- PHẦN 1: MÃ QR -->
+<div id="qr-section">
+    <h1>🌸 Quét mã QR để nhận lời chúc 20/10 🌸</h1>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=loichuc&size=200x200" alt="QR Code">
+    <button id="startBtn">Bắt đầu quét</button>
+</div>
+
+<!-- PHẦN 2: QUÉT MÃ QR -->
+<div id="scan-section">
+    <h1>Đưa mã QR vào khung bên dưới 💗</h1>
+    <div id="reader"></div>
+</div>
+
+<!-- PHẦN 3: LỜI CHÚC -->
+<div id="greeting-section">
+    <h1>💐 Chúc Mừng Ngày 20-10 💐</h1>
+    <div class="greeting-text">
+        Nhân ngày Phụ nữ Việt Nam 20/10,<br>
+        chúc bạn luôn xinh đẹp, mạnh mẽ và tràn đầy niềm vui!<br>
+        Mọi điều tốt đẹp nhất sẽ luôn đến với bạn 🌸💖
+    </div>
+</div>
+
+<!-- JS: QUÉT QR -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+<script>
+    const qrSection = document.getElementById('qr-section');
+    const scanSection = document.getElementById('scan-section');
+    const greetingSection = document.getElementById('greeting-section');
+    const startBtn = document.getElementById('startBtn');
+    const readerDiv = document.getElementById('reader');
+    let html5QrCode;
+
+    startBtn.addEventListener('click', () => {
+        qrSection.style.display = 'none';
+        scanSection.style.display = 'flex';
+        startScan();
+    });
+
+    function startScan() {
+        html5QrCode = new Html5Qrcode("reader");
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                html5QrCode.start(
+                    devices[0].id,
+                    { fps: 10, qrbox: 200 },
+                    (decodedText) => {
+                        if (decodedText === "loichuc") {
+                            html5QrCode.stop().then(() => {
+                                scanSection.style.display = 'none';
+                                showGreeting();
+                            });
+                        }
+                    },
+                    () => {}
+                );
+            }
+        }).catch(err => console.log(err));
+    }
+
+    function showGreeting() {
+        greetingSection.style.display = 'flex';
+        createHearts();
+    }
+
+    function createHearts() {
+        setInterval(() => {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, 300);
+    }
+</script>
+</body>
+</html>
