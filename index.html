@@ -112,15 +112,15 @@
             z-index: 40;
         }
 
-        /* TÊN BAY - FIX TRÀN MOBILE 100% */
+        /* TÊN BAY - FIX TRÀN + KHÔNG MẤT */
         .floating-name {
             position: fixed;
             bottom: -60px;
             color: #c2185b;
             font-weight: 700;
             pointer-events: none;
-            /* ✅ FIX TRÀN: CSS đảm bảo */
-            max-width: 90vw !important;
+            /* ✅ FIX TRÀN & KHÔNG MẤT: */
+            max-width: 85vw !important; /* Giảm từ 90vw để an toàn */
             width: auto;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -128,13 +128,14 @@
             text-shadow: 0 1px 0 rgba(255,255,255,0.6);
             z-index: 45;
             user-select: none;
-            padding: 0 5px; /* Thêm padding nhỏ */
+            padding: 0 5px;
+            box-sizing: content-box; /* Đảm bảo padding không đẩy text ra ngoài */
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 1; }
             70% { opacity: 1; }
-            100% { transform: translateY(-130vh) scale(1.05); opacity: 0; }
+            100% { transform: translateY(-110vh) scale(1.05); opacity: 0; } /* Giảm từ -130vh để giữ trong màn hình */
         }
 
         @keyframes fadeIn {
@@ -168,10 +169,10 @@
             align-items: center;
         }
 
-        /* ✅ MOBILE FIX */
+        /* ✅ MOBILE FIX TỐI ƯU */
         @media (max-width: 480px) {
             .floating-name {
-                max-width: 92vw !important;
+                max-width: 88vw !important; /* Tăng nhẹ để fit */
                 font-size: 14px !important; /* Base nhỏ hơn */
             }
         }
@@ -203,7 +204,7 @@
     </div>
 </div>
 
-<!-- JS: QUÉT QR + TÊN BAY LIÊN TỤC - FIX TRÀN -->
+<!--<JS: QUÉT QR + TÊN BAY LIÊN TỤC - KHÔNG MẤT */-->
 <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 <script>
     const qrSection = document.getElementById('qr-section');
@@ -278,7 +279,7 @@
         setInterval(() => spawnFloatingName(), 800);
     }
 
-    // ✅ FIXED: SPAWN TÊN BAY - KHÔNG BAO GIỜ TRÀN
+    // ✅ FIXED: SPAWN TÊN BAY - KHÔNG MẤT KHỎI MÀN HÌNH
     function spawnFloatingName() {
         const randomName = NAMES[Math.floor(Math.random() * NAMES.length)];
 
@@ -286,7 +287,6 @@
         el.className = 'floating-name';
         el.textContent = randomName;
 
-        // ✅ SIMPLIFIED & BULLETPROOF MOBILE FIT
         const screenWidth = window.innerWidth;
         let fontSize;
 
@@ -297,11 +297,36 @@
             fontSize = 16 + Math.random() * 12; // 16-28px
         }
 
-        // ✅ ĐƠN GIẢN: CSS max-width 90vw đã xử lý hết!
-        el.style.fontSize = fontSize + 'px';
+        // ✅ FIX LẸM BÊN PHẢI: Tính left dựa trên font size và max-width
+        const maxTextWidth = screenWidth * 0.85; // 85vw thực tế
+        const safeMargin = 10; // Pixel margin an toàn
+        const maxFontWidth = maxTextWidth - safeMargin * 2; // Chừa 20px margin
 
-        // Vị trí left: 5% - 90% (an toàn tuyệt đối)
-        const leftPercent = 5 + Math.random() * 85; // 5-90%
+        // Đảm bảo font size không làm text tràn
+        const tempSpan = document.createElement('span');
+        tempSpan.style.fontFamily = 'Poppins';
+        tempSpan.style.fontWeight = '700';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.textContent = randomName;
+        document.body.appendChild(tempSpan);
+
+        let adjustedFontSize = fontSize;
+        tempSpan.style.fontSize = adjustedFontSize + 'px';
+        let textWidth = tempSpan.offsetWidth;
+
+        while (textWidth > maxFontWidth && adjustedFontSize > 10) {
+            adjustedFontSize -= 1;
+            tempSpan.style.fontSize = adjustedFontSize + 'px';
+            textWidth = tempSpan.offsetWidth;
+        }
+
+        document.body.removeChild(tempSpan);
+        el.style.fontSize = adjustedFontSize + 'px';
+
+        // ✅ TÍNH LEFT AN TOÀN: KHÔNG ĐỂ TRÀN BÊN PHẢI
+        const leftMax = 100 - ((textWidth / screenWidth) * 100) - 5; // Đảm bảo không vượt 95%
+        const leftPercent = Math.min(90, Math.max(5, Math.random() * leftMax)); // 5-90% an toàn
         el.style.left = leftPercent + 'vw';
 
         const duration = 4.5 + Math.random() * 4.5;
