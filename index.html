@@ -254,21 +254,27 @@
     ];
 
     // --- QR setup (nếu bạn đã dùng qr hiện tại, có thể giữ nguyên) ---
-    function createShareQrClient() {
+    function createShareQr() {
+        // tạo URL muốn mã hoá
         let shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
+        // nếu origin = null (ví dụ mở file:// hoặc preview), fallback sang URL deploy tĩnh
         if (!window.location.origin || window.location.origin === 'null') {
             shareUrl = 'https://Huy0707.github.io/20-10/?q=loichuc';
         }
-        qrImage.innerHTML = ''; // xoá qr cũ
-        new QRCode(qrImage, {
-            text: shareUrl,
-            width: 200,
-            height: 200,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
+
+        // debug: log để chắc chắc shareUrl không rỗng
+        console.log('shareUrl for QR:', shareUrl);
+
+        // phải encode trước khi gắn vào query param
+        const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data='
+            + encodeURIComponent(shareUrl)
+            + '&size=200x200'
+            + '&t=' + Date.now(); // thêm timestamp để tránh cache
+
+        qrImage.src = qrApi;
+        qrImage.alt = 'QR mở ' + shareUrl;
     }
+
     // Nếu trang được mở với ?q=loichuc thì hiển thị lời chúc
     function checkQueryShowGreeting() {
         const params = new URLSearchParams(window.location.search);
