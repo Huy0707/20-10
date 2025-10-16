@@ -20,10 +20,9 @@
 
         h1 {
             color: #c2185b;
-            font-size: clamp(1.2em, 4vw, 1.8em);
+            font-size: clamp(1.2em, 5vw, 2em);
             margin-bottom: 20px;
             text-align: center;
-            padding: 0 10px;
         }
 
         /* --- PHẦN MÃ QR --- */
@@ -34,8 +33,6 @@
             animation: fadeIn 1.5s ease;
             z-index: 30;
             padding: 20px;
-            width: 100%;
-            max-width: 400px;
         }
 
         #qr-section img {
@@ -52,14 +49,13 @@
         button {
             background-color: #c2185b;
             color: white;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-size: clamp(14px, 3.5vw, 16px);
+            font-size: clamp(14px, 4vw, 16px);
             cursor: pointer;
             transition: 0.3s;
             z-index: 30;
-            min-width: 120px;
         }
 
         button:hover {
@@ -74,13 +70,11 @@
             animation: fadeIn 1.5s ease;
             z-index: 30;
             padding: 20px;
-            width: 100%;
-            max-width: 400px;
         }
 
         #reader {
-            width: clamp(200px, 50vw, 250px);
-            height: clamp(200px, 50vw, 250px);
+            width: clamp(200px, 70vw, 250px);
+            height: clamp(200px, 70vw, 250px);
             margin-top: 20px;
             border: 3px dashed #c2185b;
             border-radius: 12px;
@@ -105,30 +99,30 @@
         .greeting-header {
             position: relative;
             z-index: 40;
-            margin-top: 40px;
-            margin-bottom: 20px;
+            margin-top: clamp(20px, 8vh, 40px);
         }
 
         .greeting-text {
-            font-size: clamp(1.1em, 3.5vw, 1.4em);
+            font-size: clamp(1em, 4vw, 1.4em);
             color: #c2185b;
             line-height: 1.6em;
-            max-width: min(90vw, 700px);
+            max-width: 90vw;
+            max-width: min(700px, 90vw);
             background: rgba(255,255,255,0.9);
-            padding: 18px;
+            padding: clamp(12px, 4vw, 18px);
             border-radius: 14px;
             box-shadow: 0 0 20px rgba(0,0,0,0.08);
             margin-top: 20px;
             animation: slideUp 1s ease;
             z-index: 40;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
         }
 
-        /* Floating names - ĐÃ CHỈNH SỬA */
+        /* Floating names - GIỚI HẠN TRONG MÀN HÌNH */
         .floating-name {
-            position: fixed;
+            position: absolute;
             bottom: -60px;
+            /* GIỚI HẠN: 5% - 95% viewport */
+            left: clamp(5vw, var(--left-pos), 95vw);
             color: #c2185b;
             font-weight: 700;
             pointer-events: none;
@@ -136,22 +130,24 @@
             text-shadow: 0 1px 0 rgba(255,255,255,0.6);
             z-index: 45;
             user-select: none;
-            /* Giới hạn kích thước chữ */
-            font-size: clamp(12px, 3vw, 24px);
-            max-width: 85vw;
+            /* FONT-SIZE RESPONSIVE */
+            font-size: clamp(12px, 4vw, 24px);
+            /* Đảm bảo không bị cắt */
+            transform: translateX(-50%);
+            max-width: 90vw;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
+            0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
             70% { opacity: 1; }
-            100% { transform: translateY(-130vh) scale(1.05); opacity: 0; }
+            100% { transform: translateX(-50%) translateY(-130vh) scale(1.05); opacity: 0; }
         }
 
-        /* Background names (phủ nền) - ĐÃ CHỈNH SỬA */
+        /* Background names - GIỚI HẠN TRONG MÀN HÌNH */
         .bg-name {
-            position: fixed;
+            position: absolute;
             color: rgba(194,24,91,0.08);
             font-weight: 700;
             pointer-events: none;
@@ -159,8 +155,11 @@
             transform-origin: center;
             z-index: 20;
             white-space: nowrap;
-            /* Giới hạn kích thước chữ */
-            font-size: clamp(8px, 2vw, 28px);
+            /* GIỚI HẠN: 2% - 98% viewport */
+            left: clamp(2vw, var(--left-pos), 98vw);
+            top: clamp(2vh, var(--top-pos), 98vh);
+            /* FONT-SIZE NHỎ HƠN CHO MOBILE */
+            font-size: clamp(6px, 2.5vw, 20px);
             max-width: 90vw;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -197,10 +196,10 @@
             color: #ff4d6d;
             font-size: clamp(12px, 4vw, 20px);
             animation: heartFloat 4s linear infinite;
-            z-index: 10;
+            left: clamp(5vw, var(--heart-left), 95vw);
         }
 
-        /* Đảm bảo overlay chữ nền không che nội dung chính */
+        /* đảm bảo overlay chữ nền không che nội dung chính */
         .overlay-center {
             position: relative;
             z-index: 40;
@@ -208,28 +207,23 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 90vw;
         }
 
-        /* Responsive cho màn hình nhỏ */
+        /* RESPONSIVE CHO MOBILE */
         @media (max-width: 480px) {
-            #qr-section, #scan-section {
-                padding: 15px;
-            }
-
-            .greeting-text {
-                padding: 15px;
-                margin: 10px;
-            }
-
             .floating-name {
-                font-size: clamp(10px, 2.5vw, 18px);
-                max-width: 80vw;
+                font-size: clamp(10px, 3.5vw, 18px);
+                max-width: 85vw;
             }
 
             .bg-name {
-                font-size: clamp(6px, 1.5vw, 20px);
+                font-size: clamp(5px, 2vw, 16px);
                 max-width: 85vw;
+            }
+
+            .greeting-text {
+                padding: 12px;
+                margin: 10px;
             }
         }
     </style>
@@ -340,21 +334,17 @@
     // --- EFFECT: tên bay lên dần và sau đó phủ nền ---
     function showGreeting() {
         greetingSection.style.display = 'flex';
-        // Bắt đầu trình diễn tên
         createFloatingNames(NAMES);
-        // Thêm hearts nếu cần
         createHearts();
     }
 
     function createFloatingNames(names) {
-        // spawn từng tên với khoảng delay
         names.forEach((name, i) => {
             setTimeout(() => spawnFloating(name), i * 600);
         });
 
-        // Sau khi tất cả tên bay xong, tạo background phủ kín
         setTimeout(() => {
-            fillBackgroundWithNames(names, 80); // Giảm số lượng cho mobile
+            fillBackgroundWithNames(names, 100); // GIẢM SỐ LƯỢNG CHO MOBILE
         }, names.length * 600 + 1200);
     }
 
@@ -363,29 +353,16 @@
         el.className = 'floating-name';
         el.textContent = name;
 
-        // Tính toán vị trí an toàn cho mobile
-        const screenWidth = window.innerWidth;
-        const margin = Math.min(20, screenWidth * 0.05); // 5% màn hình hoặc 20px
-        const maxLeft = (screenWidth - margin * 2) / screenWidth * 100 - 5; // trừ thêm 5% cho padding
+        // GIỚI HẠN 5% - 95% viewport width
+        const left = 5 + Math.random() * 90;
+        el.style.setProperty('--left-pos', left + 'vw');
 
-        // Vị trí ngang ngẫu nhiên trong vùng an toàn
-        const left = margin / screenWidth * 100 + Math.random() * (maxLeft - margin / screenWidth * 100);
-        el.style.left = left + 'vw';
-
-        // Font size responsive
-        const baseFontSize = Math.min(24, window.innerWidth * 0.06); // 6% màn hình, max 24px
-        el.style.fontSize = (baseFontSize * (0.8 + Math.random() * 0.4)) + 'px';
-
-        // Thời gian bay khác nhau
-        const duration = 3 + Math.random() * 3; // 3 - 6s
+        const duration = 3 + Math.random() * 3;
         el.style.animation = `floatUp ${duration}s ease-in forwards`;
         greetingSection.appendChild(el);
 
-        // Khi animation kết thúc, chuyển tên đó thành "phủ nền" nhỏ mờ
         el.addEventListener('animationend', () => {
-            // tạo một bg-name ở vị trí cuối của el
             createBgName(name, left);
-            // xóa tên bay để tiết kiệm DOM
             el.remove();
         });
     }
@@ -395,27 +372,13 @@
         bg.className = 'bg-name';
         bg.textContent = name;
 
-        // Phân bố chiều dọc ngẫu nhiên, tránh phần nội dung chính
-        const contentHeight = 300; // Ước lượng chiều cao nội dung chính
-        const screenHeight = window.innerHeight;
-        let top;
+        // GIỚI HẠN 2% - 98% viewport
+        const top = 2 + Math.random() * 96;
+        const leftOffset = (Math.random() * 6 - 3);
+        bg.style.setProperty('--left-pos', (leftVw + leftOffset) + 'vw');
+        bg.style.setProperty('--top-pos', top + 'vh');
 
-        if (Math.random() < 0.3) {
-            // 30% cơ hội ở phần trên (trên nội dung)
-            top = Math.random() * (contentHeight * 0.7);
-        } else {
-            // 70% cơ hội ở phần dưới
-            top = contentHeight + Math.random() * (screenHeight - contentHeight - 50);
-        }
-
-        bg.style.left = (leftVw + (Math.random() * 6 - 3)) + 'vw';
-        bg.style.top = (top / screenHeight * 100) + 'vh';
-
-        // Font size nhỏ hơn cho background
-        const bgFontSize = Math.min(20, window.innerWidth * 0.04);
-        bg.style.fontSize = (bgFontSize * (0.5 + Math.random() * 0.8)) + 'px';
-
-        // Xoay nhẹ random
+        bg.style.fontSize = (6 + Math.random() * 20) + 'px';
         const rot = (Math.random() * 40 - 20) + 'deg';
         bg.style.setProperty('--rot', rot);
         bg.style.transform = `rotate(${rot})`;
@@ -424,79 +387,56 @@
         greetingSection.appendChild(bg);
     }
 
-    function fillBackgroundWithNames(names, count = 80) {
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
-        const margin = Math.min(15, screenWidth * 0.03);
-        const contentHeight = 300;
+    function fillBackgroundWithNames(names, count = 100) {
+        // GIẢM SỐ LƯỢNG CHO PERFORMANCE TRÊN MOBILE
+        const mobileCount = window.innerWidth < 768 ? Math.min(count, 60) : count;
 
-        // Tạo nhiều bg-name rải đều để "phủ kín" nhưng không quá dày
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < mobileCount; i++) {
             const name = names[Math.floor(Math.random() * names.length)];
             const bg = document.createElement('div');
             bg.className = 'bg-name';
             bg.textContent = name;
 
-            // Vị trí an toàn
-            const left = margin + Math.random() * (screenWidth - margin * 2);
-            let top;
+            // GIỚI HẠN 2% - 98% viewport
+            const left = 2 + Math.random() * 96;
+            const top = 2 + Math.random() * 96;
+            bg.style.setProperty('--left-pos', left + 'vw');
+            bg.style.setProperty('--top-pos', top + 'vh');
 
-            if (Math.random() < 0.25) {
-                top = Math.random() * (contentHeight * 0.6);
-            } else {
-                top = contentHeight + Math.random() * (screenHeight - contentHeight - margin);
-            }
-
-            bg.style.left = (left / screenWidth * 100) + 'vw';
-            bg.style.top = (top / screenHeight * 100) + 'vh';
-
-            // Font size nhỏ
-            const fontSize = Math.min(18, screenWidth * 0.035);
-            bg.style.fontSize = (fontSize * (0.4 + Math.random() * 0.6)) + 'px';
-
+            bg.style.fontSize = (5 + Math.random() * 18) + 'px';
             const rot = (Math.random() * 80 - 40) + 'deg';
-            bg.style.setProperty('--rot', rot + 'deg');
-            bg.style.transform = `rotate(${rot}deg)`;
+            bg.style.setProperty('--rot', rot);
+            bg.style.transform = `rotate(${rot})`;
             bg.style.opacity = (0.03 + Math.random() * 0.12).toString();
 
-            // Một số sẽ nhẹ di chuyển chậm để tạo động
-            if (Math.random() < 0.1) { // Giảm tần suất cho mobile
+            if (Math.random() < 0.1) {
                 const floatDur = 6 + Math.random() * 8;
                 bg.style.transition = `transform ${floatDur}s ease-in-out`;
                 setTimeout(() => {
-                    bg.style.transform = `translateY(${(Math.random() * 4 - 2)}px) rotate(${rot}deg)`;
+                    bg.style.transform = `translateY(${(Math.random() * 4 - 2)}px) rotate(${rot})`;
                 }, 100 + Math.random() * 1000);
             }
-
             greetingSection.appendChild(bg);
         }
 
-        // Gradually darken/make nền tên nhiều hơn: tạo thêm một lớp nhẹ sau vài giây
+        // THÊM LỚP NỀN NHẸ
         setTimeout(() => {
-            for (let j = 0; j < 30; j++) { // Giảm số lượng
+            const extraCount = window.innerWidth < 768 ? 30 : 60;
+            for (let j = 0; j < extraCount; j++) {
                 const name = names[Math.floor(Math.random() * names.length)];
                 const bg = document.createElement('div');
                 bg.className = 'bg-name';
                 bg.textContent = name;
 
-                const left = margin + Math.random() * (screenWidth - margin * 2);
-                let top;
+                const left = 2 + Math.random() * 96;
+                const top = 2 + Math.random() * 96;
+                bg.style.setProperty('--left-pos', left + 'vw');
+                bg.style.setProperty('--top-pos', top + 'vh');
 
-                if (Math.random() < 0.2) {
-                    top = Math.random() * (contentHeight * 0.5);
-                } else {
-                    top = contentHeight + Math.random() * (screenHeight - contentHeight - margin);
-                }
-
-                bg.style.left = (left / screenWidth * 100) + 'vw';
-                bg.style.top = (top / screenHeight * 100) + 'vh';
-
-                const fontSize = Math.min(15, screenWidth * 0.03);
-                bg.style.fontSize = (fontSize * (0.3 + Math.random() * 0.5)) + 'px';
-
+                bg.style.fontSize = (4 + Math.random() * 16) + 'px';
                 const rot = (Math.random() * 80 - 40) + 'deg';
-                bg.style.setProperty('--rot', rot + 'deg');
-                bg.style.transform = `rotate(${rot}deg)`;
+                bg.style.setProperty('--rot', rot);
+                bg.style.transform = `rotate(${rot})`;
                 bg.style.opacity = (0.02 + Math.random() * 0.08).toString();
                 greetingSection.appendChild(bg);
             }
@@ -508,18 +448,20 @@
             const heart = document.createElement("div");
             heart.classList.add("heart");
             heart.innerHTML = "❤";
-            heart.style.left = Math.random() * 100 + "vw";
-            const heartSize = Math.min(20, window.innerWidth * 0.05);
-            heart.style.fontSize = (heartSize * (0.5 + Math.random() * 0.8)) + "px";
-            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+
+            // GIỚI HẠN 5% - 95% viewport
+            const left = 5 + Math.random() * 90;
+            heart.style.setProperty('--heart-left', left + 'vw');
+
+            heart.style.fontSize = (10 + Math.random() * 15) + "px";
+            heart.style.animationDuration = (3 + Math.random() * 2) + "s";
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 5000);
-        }, 800); // Tăng interval cho mobile
+        }, 800); // TĂNG INTERVAL CHO MOBILE
     }
 
-    // Khởi tạo QR khi load
+    // Khởi tạo
     createShareQr();
-    // Nếu trang mở với ?q=loichuc
     checkQueryShowGreeting();
 </script>
 </body>
