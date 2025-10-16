@@ -317,22 +317,40 @@
         const el = document.createElement('div');
         el.className = 'floating-name';
         el.textContent = name;
-        // vị trí ngang ngẫu nhiên (giữ trong 8%-92% để không sát lề)
-        const screenWidth = window.innerWidth;
-        const elementWidth = 80; // ví dụ phần tử rộng 80px
-        const minLeft = 0.08 * screenWidth; // 8%
-        const maxLeft = screenWidth - elementWidth - minLeft; // trừ bớt phần tử
-        const left = minLeft + Math.random() * (maxLeft - minLeft);
-// áp dụng vào phần tử
-        element.style.left = `${left}px`;
 
+        // vị trí ngang ngẫu nhiên nhưng giới hạn để không sát lề
+        let left = 8 + Math.random() * 84; // 8% - 92%
+        // an toàn hơn: clamp (nếu muốn tránh lệch lắm)
+        left = Math.min(Math.max(left, 6), 94);
         el.style.left = left + 'vw';
-        // font-size ngẫu nhiên cho độ nổi bật
-        el.style.fontSize = (18 + Math.random() * 14) + 'px';
-        // thời gian bay khác nhau
-        const duration = 3 + Math.random() * 3; // 3 - 6s
-        el.style.animation = `floatUp ${duration}s ease-in forwards`;
+
+        // font-size linh hoạt: dùng clamp trong CSS, nhưng bạn vẫn có thể override bằng JS nếu cần
+        // ví dụ nhỏ thêm một chút variation
+        const fs = Math.floor(14 + Math.random() * 10);
+        // nếu cần đảm bảo trên mobile không quá lớn, kiểm tra kích thước màn
+        if (window.innerWidth <= 480) {
+            // nếu là điện thoại, thu nhỏ thêm
+            el.style.fontSize = Math.max(11, Math.min(fs, 18)) + 'px';
+            el.style.maxWidth = '84vw';
+            el.style.whiteSpace = 'normal'; // cho phép xuống dòng
+            el.style.wordBreak = 'break-word';
+        } else {
+            el.style.fontSize = fs + 'px';
+            el.style.maxWidth = '60vw';
+            // trên desktop giữ nowrap (tùy bạn)
+            // el.style.whiteSpace = 'nowrap';
+        }
+
+        const duration = 3 + Math.random() * 3;
+        el.style.animation = `floatUp ${duration}s cubic-bezier(.22,.8,.28,1) forwards`;
+
         greetingSection.appendChild(el);
+
+        el.addEventListener('animationend', () => {
+            createBgName(name, left);
+            el.remove();
+        });
+    }
 
         // Khi animation kết thúc, chuyển tên đó thành "phủ nền" nhỏ mờ
         el.addEventListener('animationend', () => {
