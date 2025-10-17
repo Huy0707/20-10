@@ -1,356 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lời Chúc 20-10</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tên thành trái tim</title>
     <style>
-        /* --- RESET + BASE --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body {
-            height: 100%;
-            font-family: "Poppins", sans-serif;
-            background: linear-gradient(135deg, #f7c1c1, #f7e1e1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            overflow: hidden;
+        :root{
+            --bg:#0f1724;
+            --card:#071127;
+            --accent:#ff6b81;
+            --text:#f8fafc;
+            --muted:rgba(248,250,252,0.65);
         }
-
-        h1 {
-            color: #c2185b;
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-align: center;
+        html,body{height:100%;margin:0;font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto; background: radial-gradient(ellipse at 10% 10%, rgba(255,107,129,0.06), transparent 10%), var(--bg); color:var(--text)}
+        .wrap{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            gap:18px;
+            padding:28px;
+            box-sizing:border-box;
         }
-
-        /* --- PHẦN MÃ QR --- */
-        #qr-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeIn 1.5s ease;
-            z-index: 30;
+        .card{
+            width:min(960px, 96vw);
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:14px;
+            padding:28px;
+            box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+            border: 1px solid rgba(255,255,255,0.03);
         }
-
-        #qr-section img {
-            width: 200px;
-            height: 200px;
-            border: 4px solid #c2185b;
-            border-radius: 12px;
-            padding: 10px;
-            background: #fff;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+        h1{margin:0 0 6px 0;font-weight:600;font-size:20px;color:var(--accent)}
+        p.lead{margin:0 0 16px 0;color:var(--muted)}
+        #stage{
+            position:relative;
+            height:540px;
+            background:linear-gradient(180deg, rgba(255,255,255,0.006), transparent);
+            border-radius:10px;
+            overflow:hidden;
+            display:block;
         }
-
-        button {
-            background-color: #c2185b;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-            z-index: 30;
+        .name{
+            position:absolute;
+            transform-origin:center center;
+            white-space:nowrap;
+            padding:4px 8px;
+            border-radius:999px;
+            font-weight:600;
+            font-size:14px;
+            opacity:0;
+            pointer-events:none;
+            background: rgba(255,255,255,0.02);
+            color:var(--text);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: transform .45s cubic-bezier(.2,.9,.3,1), opacity .45s ease, filter .35s;
+            filter: drop-shadow(0 6px 16px rgba(1,6,23,0.6));
+            will-change: transform, opacity;
         }
-
-        button:hover {
-            background-color: #a3154d;
+        .name.show{
+            opacity:1;
         }
-
-        /* --- PHẦN CAMERA QUÉT --- */
-        #scan-section {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            animation: fadeIn 1.5s ease;
-            z-index: 30;
+        .controls{
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin-top:14px;
+            flex-wrap:wrap;
         }
-
-        #reader {
-            width: 250px;
-            height: 250px;
-            margin-top: 20px;
-            border: 3px dashed #c2185b;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.7);
+        .controls label{color:var(--muted);font-size:13px}
+        .controls input[type="text"]{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+        .btn{
+            padding:8px 12px;border-radius:9px;background:linear-gradient(90deg,var(--accent),#ff8aa8);color:#fff;border:none;cursor:pointer;font-weight:600;
         }
-
-        /* --- PHẦN LỜI CHÚC --- */
-        #greeting-section {
-            display: none;
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            animation: fadeIn 1.5s ease;
-            overflow: hidden;
-        }
-
-        .greeting-header {
-            position: relative;
-            z-index: 40;
-            margin-top: 40px;
-        }
-
-        .greeting-text {
-            font-size: 1.4em;
-            color: #c2185b;
-            line-height: 1.6em;
-            max-width: 700px;
-            background: rgba(255,255,255,0.9);
-            padding: 18px;
-            border-radius: 14px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.08);
-            margin-top: 20px;
-            animation: slideUp 1s ease;
-            z-index: 40;
-        }
-
-        /* TÊN BAY - FIX TRÀN + KHÔNG MẤT */
-        .floating-name {
-            position: fixed;
-            bottom: -60px;
-            color: #c2185b;
-            font-weight: 700;
-            pointer-events: none;
-            /* ✅ FIX TRÀN & KHÔNG MẤT: */
-            max-width: 85vw !important; /* Giảm từ 90vw để an toàn */
-            width: auto;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.6);
-            z-index: 45;
-            user-select: none;
-            padding: 0 5px;
-            box-sizing: content-box; /* Đảm bảo padding không đẩy text ra ngoài */
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            70% { opacity: 1; }
-            100% { transform: translateY(-110vh) scale(1.05); opacity: 0; } /* Giảm từ -130vh để giữ trong màn hình */
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(80px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes heartFloat {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-800px) scale(0.8); opacity: 0; }
-        }
-
-        .heart {
-            position: fixed;
-            bottom: 0;
-            color: #ff4d6d;
-            font-size: 20px;
-            animation: heartFloat 4s linear infinite;
-        }
-
-        .overlay-center {
-            position: relative;
-            z-index: 40;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* ✅ MOBILE FIX TỐI ƯU */
-        @media (max-width: 480px) {
-            .floating-name {
-                max-width: 88vw !important; /* Tăng nhẹ để fit */
-                font-size: 14px !important; /* Base nhỏ hơn */
-            }
+        footer{margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+        @media (max-width:520px){
+            .name{font-size:12px;padding:3px 7px}
+            #stage{height:420px}
         }
     </style>
 </head>
 <body>
-<!-- PHẦN 1: MÃ QR -->
-<div id="qr-section">
-    <h1>🌸 Quét mã QR để nhận lời chúc 20/10 🌸</h1>
-    <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?data=loichuc&size=200x200" alt="QR Code">
-    <button id="startBtn">Bắt đầu quét</button>
-</div>
+<div class="wrap">
+    <div class="card">
+        <h1>Hiển thị tên thành hình trái tim</h1>
+        <p class="lead">Quét QR để vào trang này. Các tên sẽ xuất hiện từng cái một rồi xếp thành hình trái tim. Sửa danh sách tên bên dưới nếu muốn.</p>
 
-<!-- PHẦN 2: QUÉT MÃ QR -->
-<div id="scan-section">
-    <h1>Đưa mã QR vào khung bên dưới 💗</h1>
-    <div id="reader"></div>
-</div>
+        <div id="stage" aria-hidden="false"></div>
 
-<!-- PHẦN 3: LỜI CHÚC -->
-<div id="greeting-section">
-    <div class="overlay-center">
-        <h1 class="greeting-header">💐 Chúc Mừng Ngày 20-10 💐</h1>
-        <div class="greeting-text">
-            Nhân ngày Phụ nữ Việt Nam 20/10,<br>
-            chúc các bạn luôn xinh đẹp, mạnh mẽ và tràn đầy niềm vui!<br>
-            Mọi điều tốt đẹp nhất sẽ luôn đến với các bạn 🌸💖
+        <div class="controls">
+            <label>Danh sách tên (phân tách bằng dấu phẩy):</label>
+            <input id="namesInput" type="text" value="An, Bình, Cát, Dương, Em, Huy, Kim, Linh, Minh, Nga, Oanh, Phương, Quân, Sang, Thảo, Uyên, Vinh, Yến, Zũ" style="min-width:360px">
+            <button id="startBtn" class="btn">Bắt đầu</button>
+            <label style="margin-left:8px">Tốc độ (ms giữa các tên):</label>
+            <input id="delayInput" type="text" value="180" style="width:70px">
         </div>
+
+        <footer>Tip: tăng số tên để trái tim đầy hơn. Đặt URL của trang này vào mã QR để quét là mở trang.</footer>
     </div>
 </div>
 
-<!--<JS: QUÉT QR + TÊN BAY LIÊN TỤC - KHÔNG MẤT */-->
-<script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 <script>
-    const qrSection = document.getElementById('qr-section');
-    const scanSection = document.getElementById('scan-section');
-    const greetingSection = document.getElementById('greeting-section');
+    // ====== Cấu hình mặc định (có thể thay đổi trong UI) ======
+    const stage = document.getElementById('stage');
     const startBtn = document.getElementById('startBtn');
-    const readerDiv = document.getElementById('reader');
-    const qrImage = document.getElementById('qrImage');
-    let html5QrCode;
+    const namesInput = document.getElementById('namesInput');
+    const delayInput = document.getElementById('delayInput');
 
-    const NAMES = [
-        'Hoàng Trần Phúc An',
-        'Ngô Ngọc Bảo Châu',
-        'Nguyễn Quỳnh Chi',
-        'Trần Ngọc Ánh Dương',
-        'Nguyễn Dương Đà Giang',
-        'Đặng Thị Thảo My',
-        'Nguyễn Hoàng Kim Ngân',
-        'Phạm Ngọc Thảo Nguyên',
-        'Phạm Thị Mỹ Tuyền'
-    ];
-
-    function createShareQr() {
-        const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
-        const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(shareUrl) + '&size=200x200';
-        qrImage.src = qrApi;
+    // Hàm tạo đường trái tim (parametric)
+    // t: 0..2PI -> trả về {x,y} trên đường chuẩn
+    function heartPoint(t){
+        // Kinh điển: x = 16 sin^3 t, y = 13 cos t - 5 cos(2t) - 2 cos(3t) - cos(4t)
+        const x = 16 * Math.pow(Math.sin(t),3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+        return {x, y};
     }
 
-    function checkQueryShowGreeting() {
-        const params = new URLSearchParams(window.location.search);
-        if ((params.get('q') || '').trim().toLowerCase() === 'loichuc') {
-            qrSection.style.display = 'none';
-            scanSection.style.display = 'none';
-            showGreeting();
+    // Chuyển điểm heart (x,y) vào toạ độ pixel trong stage
+    function mapToStage(p, bounds){
+        // bounds = {minX,maxX,minY,maxY}
+        const w = stage.clientWidth, h = stage.clientHeight;
+        const scaleX = (w*0.42) / (bounds.maxX - bounds.minX); // 0.42 để trái tim vừa vặn
+        const scaleY = (h*0.42) / (bounds.maxY - bounds.minY);
+        const s = Math.min(scaleX, scaleY);
+        const cx = w/2, cy = h/2 - 10; // dịch lên một chút
+        const px = cx + (p.x * s);
+        const py = cy - (p.y * s); // y đảo chiều
+        return {left: px, top: py};
+    }
+
+    // Tạo mảng các vị trí dọc theo đường trái tim
+    function sampleHeartPositions(n){
+        const pts = [];
+        const steps = Math.max(n, 200);
+        // Tạo nhiều mẫu để có đủ điểm, sau đó lấy đều ra n điểm
+        const big = [];
+        for(let i=0;i<steps;i++){
+            const t = (i/steps) * Math.PI*2;
+            big.push(heartPoint(t));
         }
+        // Tính bounds
+        const xs = big.map(p=>p.x), ys = big.map(p=>p.y);
+        const bounds = {minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys)};
+
+        // Lấy n điểm đều trên path (bằng tham số t đều)
+        for(let i=0;i<n;i++){
+            const t = (i/n) * Math.PI*2;
+            const p = heartPoint(t);
+            pts.push(mapToStage(p, bounds));
+        }
+        return pts;
     }
 
-    startBtn.addEventListener('click', () => {
-        qrSection.style.display = 'none';
-        scanSection.style.display = 'flex';
-        startScan();
+    // Hàm animate: đặt từng tên vào vị trí, xuất hiện dần
+    function showNames(names, delay=180){
+        stage.innerHTML = ''; // xóa cũ
+        const n = names.length;
+        const positions = sampleHeartPositions(Math.max(n, 100)); // sample nhiều hơn nếu cần
+        // Nếu tên ít hơn điểm, lặp lại điểm trung tâm để trái tim đầy hơn
+        const pts = [];
+        // để phân bổ, ta lấy các điểm ở phần "trong" trái tim: lấy những điểm với t từ 0..2pi, nhưng sắp xếp sao cho khi hiển thị đều
+        for(let i=0;i<n;i++){
+            pts.push(positions[Math.floor((i/n)*positions.length)]);
+        }
+
+        // Tạo phần tử tên cho mỗi tên
+        const els = names.map((nm,i)=>{
+            const e = document.createElement('div');
+            e.className = 'name';
+            e.textContent = nm.trim();
+            stage.appendChild(e);
+            return e;
+        });
+
+        // Ban đầu đặt các phần tử ở tâm, ẩn
+        const centerX = stage.clientWidth/2, centerY = stage.clientHeight/2;
+        els.forEach(el=>{
+            el.style.left = (centerX) + 'px';
+            el.style.top = (centerY) + 'px';
+            el.style.transform = 'translate(-50%,-50%) scale(.75) rotate(0.01deg)';
+        });
+
+        // Lần lượt hiện từng tên và di chuyển tới vị trí trái tim
+        let i = 0;
+        const showQueue = () => {
+            if(i >= els.length) return;
+            const el = els[i];
+            const pos = pts[i % pts.length];
+            // Thiết lập vị trí mục tiêu và animation
+            // Delay nhỏ ngẫu nhiên để tránh quá "cứng"
+            setTimeout(()=>{
+                // Slight random jitter for natural look
+                const jitterX = (Math.random()-0.5)*8;
+                const jitterY = (Math.random()-0.5)*8;
+                el.style.left = (pos.left + jitterX) + 'px';
+                el.style.top = (pos.top + jitterY) + 'px';
+                el.style.transform = 'translate(-50%,-50%) scale(1) rotate(' + ((Math.random()-0.5)*6) + 'deg)';
+                el.classList.add('show');
+            }, 20);
+            i++;
+            setTimeout(showQueue, delay);
+        };
+
+        // Sau khi tất cả hiện xong, chúng ta có thể thêm hiệu ứng "đầy" trái tim:
+        setTimeout(()=>{
+            // nếu muốn, sắp xếp lại để tạo form dày hơn: dồn các tên vào giữa đường viền tim
+            // Hiệu ứng: pulsing nhẹ
+            stage.animate([
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.03)' },
+                { transform: 'scale(1)' }
+            ], { duration: 1200, iterations: 2 });
+        }, delay * n + 400);
+
+        showQueue();
+    }
+
+    // Khi window resize: nếu đang hiển thị, tái layout
+    let currentNames = [];
+    window.addEventListener('resize', ()=>{
+        if(currentNames.length) {
+            // Re-render positions while preserving visibility
+            const visible = currentNames;
+            // small debounce:
+            clearTimeout(window._retimeout);
+            window._retimeout = setTimeout(()=> showNames(visible, parseInt(delayInput.value||180)), 120);
+        }
     });
 
-    function startScan() {
-        html5QrCode = new Html5Qrcode("reader");
-        Html5Qrcode.getCameras().then(devices => {
-            if (devices && devices.length) {
-                html5QrCode.start(
-                    devices[0].id,
-                    { fps: 10, qrbox: 200 },
-                    (decodedText) => {
-                        const text = (decodedText || '').trim().toLowerCase();
-                        if (text === "loichuc" || text === window.location.origin + window.location.pathname + '?q=loichuc') {
-                            html5QrCode.stop().then(() => {
-                                scanSection.style.display = 'none';
-                                showGreeting();
-                            }).catch(err => {
-                                scanSection.style.display = 'none';
-                                showGreeting();
-                            });
-                        }
-                    },
-                    () => {}
-                ).catch(err => console.error('Start camera failed:', err));
+    // Bắt đầu khi nhấn nút
+    startBtn.addEventListener('click', ()=>{
+        const raw = namesInput.value.trim();
+        if(!raw) return;
+        const arr = raw.split(',').map(s=>s.trim()).filter(Boolean);
+        // Nếu danh sách quá ngắn, nhân bản để đầy trái tim
+        let names = arr.slice();
+        if(names.length < 12){
+            // nhân bản vòng quanh để có ít nhất 12
+            while(names.length < 12){
+                names = names.concat(arr);
             }
-        }).catch(err => console.log('getCameras error:', err));
-    }
-
-    function showGreeting() {
-        greetingSection.style.display = 'flex';
-        createHearts();
-        setInterval(() => spawnFloatingName(), 400);
-    }
-
-    // ✅ FIXED: SPAWN TÊN BAY - KHÔNG MẤT KHỎI MÀN HÌNH
-    function spawnFloatingName() {
-        const randomName = NAMES[Math.floor(Math.random() * NAMES.length)];
-
-        const el = document.createElement('div');
-        el.className = 'floating-name';
-        el.textContent = randomName;
-
-        const screenWidth = window.innerWidth;
-        let fontSize;
-
-        // Mobile nhỏ (<400px): font nhỏ
-        if (screenWidth < 400) {
-            fontSize = 12 + Math.random() * 8; // 12-20px
-        } else {
-            fontSize = 16 + Math.random() * 12; // 16-28px
         }
+        currentNames = names;
+        const delay = Math.max(40, parseInt(delayInput.value) || 180);
+        showNames(names, delay);
+    });
 
-        // ✅ FIX LẸM BÊN PHẢI: Tính left dựa trên font size và max-width
-        const maxTextWidth = screenWidth * 0.85; // 85vw thực tế
-        const safeMargin = 10; // Pixel margin an toàn
-        const maxFontWidth = maxTextWidth - safeMargin * 2; // Chừa 20px margin
-
-        // Đảm bảo font size không làm text tràn
-        const tempSpan = document.createElement('span');
-        tempSpan.style.fontFamily = 'Poppins';
-        tempSpan.style.fontWeight = '700';
-        tempSpan.style.position = 'absolute';
-        tempSpan.style.visibility = 'hidden';
-        tempSpan.textContent = randomName;
-        document.body.appendChild(tempSpan);
-
-        let adjustedFontSize = fontSize;
-        tempSpan.style.fontSize = adjustedFontSize + 'px';
-        let textWidth = tempSpan.offsetWidth;
-
-        while (textWidth > maxFontWidth && adjustedFontSize > 10) {
-            adjustedFontSize -= 1;
-            tempSpan.style.fontSize = adjustedFontSize + 'px';
-            textWidth = tempSpan.offsetWidth;
-        }
-
-        document.body.removeChild(tempSpan);
-        el.style.fontSize = adjustedFontSize + 'px';
-
-        // ✅ TÍNH LEFT AN TOÀN: KHÔNG ĐỂ TRÀN BÊN PHẢI
-        const leftMax = 100 - ((textWidth / screenWidth) * 100) - 5; // Đảm bảo không vượt 95%
-        const leftPercent = Math.min(90, Math.max(5, Math.random() * leftMax)); // 5-90% an toàn
-        el.style.left = leftPercent + 'vw';
-
-        const duration = 4.5 + Math.random() * 4.5;
-        el.style.animation = `floatUp ${duration}s ease-in forwards`;
-        document.body.appendChild(el);
-
-        setTimeout(() => el.remove(), duration * 1000);
-    }
-
-    function createHearts() {
-        setInterval(() => {
-            const heart = document.createElement("div");
-            heart.classList.add("heart");
-            heart.innerHTML = "❤";
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.fontSize = Math.random() * 20 + 10 + "px";
-            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-        }, 500);
-    }
-
-    createShareQr();
-    checkQueryShowGreeting();
+    // Tự chạy lần đầu với danh sách mặc định
+    window.addEventListener('load', ()=> startBtn.click());
 </script>
 </body>
 </html>
