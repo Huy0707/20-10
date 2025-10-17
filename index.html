@@ -35,8 +35,8 @@
         #pinkboard {
             position: relative;
             margin: 20px auto;
-            height: 500px;
-            width: 500px;
+            height: 600px; /* Tăng kích thước để hiển thị đầy đủ hơn */
+            width: 600px; /* Tăng kích thước để cân đối */
             animation: animate 1.3s infinite;
             z-index: 2;
         }
@@ -46,14 +46,14 @@
             content: '';
             position: absolute;
             background: #FF5CA4;
-            width: 100px;
-            height: 160px;
-            border-top-left-radius: 50px;
-            border-top-right-radius: 50px;
+            width: 150px; /* Tăng chiều rộng để hoàn thiện hình dáng */
+            height: 250px; /* Tăng chiều cao để bao phủ đầy đủ */
+            border-top-left-radius: 80px; /* Điều chỉnh bán kính bo tròn */
+            border-top-right-radius: 80px; /* Điều chỉnh bán kính bo tròn */
         }
 
         #pinkboard:before {
-            left: 100px;
+            left: 150px; /* Điều chỉnh vị trí để cân đối */
             transform: rotate(-45deg);
             transform-origin: 0 100%;
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -153,7 +153,7 @@
 </div>
 
 <div class="center-text">
-    Anh Yêu Em
+    Chúc các bạn nữ 20-10
 </div>
 
 <script>
@@ -161,7 +161,6 @@
     const names = [
         "THẢO NGUYÊN", "MỸ TUYỀN", "THẢO MY", "ĐÀ GIANG", "KIM NGÂN",
         "ÁNH DƯƠNG", "QUỲNH CHI", "PHÚC AN", "BẢO CHÂU",
-        "NGỌC HÀ", "MINH THƯ", "LAN ANH", "TRÂM", "HỒNG NHUNG"
     ];
 
     // KIỂM TRA NGÀY 20/10
@@ -373,8 +372,8 @@
 
         function pointOnHeart(t) {
             return new Point(
-                160 * Math.pow(Math.sin(t), 3),
-                130 * Math.cos(t) - 50 * Math.cos(2 * t) - 20 * Math.cos(3 * t) - 10 * Math.cos(4 * t) + 25
+                200 * Math.pow(Math.sin(t), 3), // Tăng kích thước x để làm đầy hơn
+                180 * Math.cos(t) - 60 * Math.cos(2 * t) - 30 * Math.cos(3 * t) - 15 * Math.cos(4 * t) + 30 // Điều chỉnh y để cân đối
             );
         }
 
@@ -385,8 +384,8 @@
             canvas.height = settings.particles.size;
             function to(t) {
                 var point = pointOnHeart(t);
-                point.x = settings.particles.size / 2 + point.x * settings.particles.size / 350;
-                point.y = settings.particles.size / 2 - point.y * settings.particles.size / 350;
+                point.x = settings.particles.size / 2 + point.x * settings.particles.size / 400; // Điều chỉnh tỷ lệ
+                point.y = settings.particles.size / 2 - point.y * settings.particles.size / 400; // Điều chỉnh tỷ lệ
                 return point;
             }
             context.beginPath();
