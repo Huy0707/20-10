@@ -1,253 +1,253 @@
-<!--<!doctype html>-->
-<!--<html lang="vi">-->
-<!--<head>-->
-<!--    <meta charset="utf-8" />-->
-<!--    <meta name="viewport" content="width=device-width,initial-scale=1" />-->
-<!--    <title>Tên thành trái tim</title>-->
-<!--    <style>-->
-<!--        :root{-->
-<!--            &#45;&#45;bg:#0f1724;-->
-<!--            &#45;&#45;card:#071127;-->
-<!--            &#45;&#45;accent:#ff6b81;-->
-<!--            &#45;&#45;text:#f8fafc;-->
-<!--            &#45;&#45;muted:rgba(248,250,252,0.65);-->
-<!--        }-->
-<!--        html,body{height:100%;margin:0;font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto; background: radial-gradient(ellipse at 10% 10%, rgba(255,107,129,0.06), transparent 10%), var(&#45;&#45;bg); color:var(&#45;&#45;text)}-->
-<!--        .wrap{-->
-<!--            min-height:100vh;-->
-<!--            display:flex;-->
-<!--            align-items:center;-->
-<!--            justify-content:center;-->
-<!--            flex-direction:column;-->
-<!--            gap:18px;-->
-<!--            padding:28px;-->
-<!--            box-sizing:border-box;-->
-<!--        }-->
-<!--        .card{-->
-<!--            width:min(960px, 96vw);-->
-<!--            background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));-->
-<!--            border-radius:14px;-->
-<!--            padding:28px;-->
-<!--            box-shadow: 0 10px 30px rgba(2,6,23,0.6);-->
-<!--            border: 1px solid rgba(255,255,255,0.03);-->
-<!--        }-->
-<!--        h1{margin:0 0 6px 0;font-weight:600;font-size:20px;color:var(&#45;&#45;accent)}-->
-<!--        p.lead{margin:0 0 16px 0;color:var(&#45;&#45;muted)}-->
-<!--        #stage{-->
-<!--            position:relative;-->
-<!--            height:540px;-->
-<!--            background:linear-gradient(180deg, rgba(255,255,255,0.006), transparent);-->
-<!--            border-radius:10px;-->
-<!--            overflow:hidden;-->
-<!--            display:block;-->
-<!--        }-->
-<!--        .name{-->
-<!--            position:absolute;-->
-<!--            transform-origin:center center;-->
-<!--            white-space:nowrap;-->
-<!--            padding:4px 8px;-->
-<!--            border-radius:999px;-->
-<!--            font-weight:600;-->
-<!--            font-size:14px;-->
-<!--            opacity:0;-->
-<!--            pointer-events:none;-->
-<!--            background: rgba(255,255,255,0.02);-->
-<!--            color:var(&#45;&#45;text);-->
-<!--            border: 1px solid rgba(255,255,255,0.04);-->
-<!--            transition: transform .45s cubic-bezier(.2,.9,.3,1), opacity .45s ease, filter .35s;-->
-<!--            filter: drop-shadow(0 6px 16px rgba(1,6,23,0.6));-->
-<!--            will-change: transform, opacity;-->
-<!--        }-->
-<!--        .name.show{-->
-<!--            opacity:1;-->
-<!--        }-->
-<!--        .controls{-->
-<!--            display:flex;-->
-<!--            gap:10px;-->
-<!--            align-items:center;-->
-<!--            margin-top:14px;-->
-<!--            flex-wrap:wrap;-->
-<!--        }-->
-<!--        .controls label{color:var(&#45;&#45;muted);font-size:13px}-->
-<!--        .controls input[type="text"]{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(&#45;&#45;text)}-->
-<!--        .btn{-->
-<!--            padding:8px 12px;border-radius:9px;background:linear-gradient(90deg,var(&#45;&#45;accent),#ff8aa8);color:#fff;border:none;cursor:pointer;font-weight:600;-->
-<!--        }-->
-<!--        footer{margin-top:12px;color:var(&#45;&#45;muted);font-size:13px;text-align:center}-->
-<!--        @media (max-width:520px){-->
-<!--            .name{font-size:12px;padding:3px 7px}-->
-<!--            #stage{height:420px}-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="wrap">-->
-<!--    <div class="card">-->
-<!--        <h1>Hiển thị tên thành hình trái tim</h1>-->
-<!--        <p class="lead">Quét QR để vào trang này. Các tên sẽ xuất hiện từng cái một rồi xếp thành hình trái tim. Sửa danh sách tên bên dưới nếu muốn.</p>-->
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tên thành trái tim</title>
+    <style>
+        :root{
+            --bg:#0f1724;
+            --card:#071127;
+            --accent:#ff6b81;
+            --text:#f8fafc;
+            --muted:rgba(248,250,252,0.65);
+        }
+        html,body{height:100%;margin:0;font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto; background: radial-gradient(ellipse at 10% 10%, rgba(255,107,129,0.06), transparent 10%), var(--bg); color:var(--text)}
+        .wrap{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            gap:18px;
+            padding:28px;
+            box-sizing:border-box;
+        }
+        .card{
+            width:min(960px, 96vw);
+            background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius:14px;
+            padding:28px;
+            box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        h1{margin:0 0 6px 0;font-weight:600;font-size:20px;color:var(--accent)}
+        p.lead{margin:0 0 16px 0;color:var(--muted)}
+        #stage{
+            position:relative;
+            height:540px;
+            background:linear-gradient(180deg, rgba(255,255,255,0.006), transparent);
+            border-radius:10px;
+            overflow:hidden;
+            display:block;
+        }
+        .name{
+            position:absolute;
+            transform-origin:center center;
+            white-space:nowrap;
+            padding:4px 8px;
+            border-radius:999px;
+            font-weight:600;
+            font-size:14px;
+            opacity:0;
+            pointer-events:none;
+            background: rgba(255,255,255,0.02);
+            color:var(--text);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: transform .45s cubic-bezier(.2,.9,.3,1), opacity .45s ease, filter .35s;
+            filter: drop-shadow(0 6px 16px rgba(1,6,23,0.6));
+            will-change: transform, opacity;
+        }
+        .name.show{
+            opacity:1;
+        }
+        .controls{
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin-top:14px;
+            flex-wrap:wrap;
+        }
+        .controls label{color:var(--muted);font-size:13px}
+        .controls input[type="text"]{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+        .btn{
+            padding:8px 12px;border-radius:9px;background:linear-gradient(90deg,var(--accent),#ff8aa8);color:#fff;border:none;cursor:pointer;font-weight:600;
+        }
+        footer{margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+        @media (max-width:520px){
+            .name{font-size:12px;padding:3px 7px}
+            #stage{height:420px}
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <h1>Hiển thị tên thành hình trái tim</h1>
+        <p class="lead">Quét QR để vào trang này. Các tên sẽ xuất hiện từng cái một rồi xếp thành hình trái tim. Sửa danh sách tên bên dưới nếu muốn.</p>
 
-<!--        <div id="stage" aria-hidden="false"></div>-->
+        <div id="stage" aria-hidden="false"></div>
 
-<!--        <div class="controls">-->
-<!--            <label>Danh sách tên (phân tách bằng dấu phẩy):</label>-->
-<!--            <input id="namesInput" type="text" value="Dương, Giang, Tuyền, My, Nguyên, Ngân, Châu, Chi, An" style="min-width:360px">-->
-<!--            <button id="startBtn" class="btn">Bắt đầu</button>-->
-<!--            <label style="margin-left:8px">Tốc độ (ms giữa các tên):</label>-->
-<!--            <input id="delayInput" type="text" value="180" style="width:70px">-->
-<!--        </div>-->
+        <div class="controls">
+            <label>Danh sách tên (phân tách bằng dấu phẩy):</label>
+            <input id="namesInput" type="text" value="An, Bình, Cát, Dương, Em, Huy, Kim, Linh, Minh, Nga, Oanh, Phương, Quân, Sang, Thảo, Uyên, Vinh, Yến, Zũ" style="min-width:360px">
+            <button id="startBtn" class="btn">Bắt đầu</button>
+            <label style="margin-left:8px">Tốc độ (ms giữa các tên):</label>
+            <input id="delayInput" type="text" value="180" style="width:70px">
+        </div>
 
-<!--        <footer>Tip: tăng số tên để trái tim đầy hơn. Đặt URL của trang này vào mã QR để quét là mở trang.</footer>-->
-<!--    </div>-->
-<!--</div>-->
+        <footer>Tip: tăng số tên để trái tim đầy hơn. Đặt URL của trang này vào mã QR để quét là mở trang.</footer>
+    </div>
+</div>
 
-<!--<script>-->
-<!--    // ====== Cấu hình mặc định (có thể thay đổi trong UI) ======-->
-<!--    const stage = document.getElementById('stage');-->
-<!--    const startBtn = document.getElementById('startBtn');-->
-<!--    const namesInput = document.getElementById('namesInput');-->
-<!--    const delayInput = document.getElementById('delayInput');-->
+<script>
+    // ====== Cấu hình mặc định (có thể thay đổi trong UI) ======
+    const stage = document.getElementById('stage');
+    const startBtn = document.getElementById('startBtn');
+    const namesInput = document.getElementById('namesInput');
+    const delayInput = document.getElementById('delayInput');
 
-<!--    // Hàm tạo đường trái tim (parametric)-->
-<!--    // t: 0..2PI -> trả về {x,y} trên đường chuẩn-->
-<!--    function heartPoint(t){-->
-<!--        // Kinh điển: x = 16 sin^3 t, y = 13 cos t - 5 cos(2t) - 2 cos(3t) - cos(4t)-->
-<!--        const x = 16 * Math.pow(Math.sin(t),3);-->
-<!--        const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);-->
-<!--        return {x, y};-->
-<!--    }-->
+    // Hàm tạo đường trái tim (parametric)
+    // t: 0..2PI -> trả về {x,y} trên đường chuẩn
+    function heartPoint(t){
+        // Kinh điển: x = 16 sin^3 t, y = 13 cos t - 5 cos(2t) - 2 cos(3t) - cos(4t)
+        const x = 16 * Math.pow(Math.sin(t),3);
+        const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+        return {x, y};
+    }
 
-<!--    // Chuyển điểm heart (x,y) vào toạ độ pixel trong stage-->
-<!--    function mapToStage(p, bounds){-->
-<!--        // bounds = {minX,maxX,minY,maxY}-->
-<!--        const w = stage.clientWidth, h = stage.clientHeight;-->
-<!--        const scaleX = (w*0.42) / (bounds.maxX - bounds.minX); // 0.42 để trái tim vừa vặn-->
-<!--        const scaleY = (h*0.42) / (bounds.maxY - bounds.minY);-->
-<!--        const s = Math.min(scaleX, scaleY);-->
-<!--        const cx = w/2, cy = h/2 - 10; // dịch lên một chút-->
-<!--        const px = cx + (p.x * s);-->
-<!--        const py = cy - (p.y * s); // y đảo chiều-->
-<!--        return {left: px, top: py};-->
-<!--    }-->
+    // Chuyển điểm heart (x,y) vào toạ độ pixel trong stage
+    function mapToStage(p, bounds){
+        // bounds = {minX,maxX,minY,maxY}
+        const w = stage.clientWidth, h = stage.clientHeight;
+        const scaleX = (w*0.42) / (bounds.maxX - bounds.minX); // 0.42 để trái tim vừa vặn
+        const scaleY = (h*0.42) / (bounds.maxY - bounds.minY);
+        const s = Math.min(scaleX, scaleY);
+        const cx = w/2, cy = h/2 - 10; // dịch lên một chút
+        const px = cx + (p.x * s);
+        const py = cy - (p.y * s); // y đảo chiều
+        return {left: px, top: py};
+    }
 
-<!--    // Tạo mảng các vị trí dọc theo đường trái tim-->
-<!--    function sampleHeartPositions(n){-->
-<!--        const pts = [];-->
-<!--        const steps = Math.max(n, 200);-->
-<!--        // Tạo nhiều mẫu để có đủ điểm, sau đó lấy đều ra n điểm-->
-<!--        const big = [];-->
-<!--        for(let i=0;i<steps;i++){-->
-<!--            const t = (i/steps) * Math.PI*2;-->
-<!--            big.push(heartPoint(t));-->
-<!--        }-->
-<!--        // Tính bounds-->
-<!--        const xs = big.map(p=>p.x), ys = big.map(p=>p.y);-->
-<!--        const bounds = {minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys)};-->
+    // Tạo mảng các vị trí dọc theo đường trái tim
+    function sampleHeartPositions(n){
+        const pts = [];
+        const steps = Math.max(n, 200);
+        // Tạo nhiều mẫu để có đủ điểm, sau đó lấy đều ra n điểm
+        const big = [];
+        for(let i=0;i<steps;i++){
+            const t = (i/steps) * Math.PI*2;
+            big.push(heartPoint(t));
+        }
+        // Tính bounds
+        const xs = big.map(p=>p.x), ys = big.map(p=>p.y);
+        const bounds = {minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys)};
 
-<!--        // Lấy n điểm đều trên path (bằng tham số t đều)-->
-<!--        for(let i=0;i<n;i++){-->
-<!--            const t = (i/n) * Math.PI*2;-->
-<!--            const p = heartPoint(t);-->
-<!--            pts.push(mapToStage(p, bounds));-->
-<!--        }-->
-<!--        return pts;-->
-<!--    }-->
+        // Lấy n điểm đều trên path (bằng tham số t đều)
+        for(let i=0;i<n;i++){
+            const t = (i/n) * Math.PI*2;
+            const p = heartPoint(t);
+            pts.push(mapToStage(p, bounds));
+        }
+        return pts;
+    }
 
-<!--    // Hàm animate: đặt từng tên vào vị trí, xuất hiện dần-->
-<!--    function showNames(names, delay=180){-->
-<!--        stage.innerHTML = ''; // xóa cũ-->
-<!--        const n = names.length;-->
-<!--        const positions = sampleHeartPositions(Math.max(n, 100)); // sample nhiều hơn nếu cần-->
-<!--        // Nếu tên ít hơn điểm, lặp lại điểm trung tâm để trái tim đầy hơn-->
-<!--        const pts = [];-->
-<!--        // để phân bổ, ta lấy các điểm ở phần "trong" trái tim: lấy những điểm với t từ 0..2pi, nhưng sắp xếp sao cho khi hiển thị đều-->
-<!--        for(let i=0;i<n;i++){-->
-<!--            pts.push(positions[Math.floor((i/n)*positions.length)]);-->
-<!--        }-->
+    // Hàm animate: đặt từng tên vào vị trí, xuất hiện dần
+    function showNames(names, delay=180){
+        stage.innerHTML = ''; // xóa cũ
+        const n = names.length;
+        const positions = sampleHeartPositions(Math.max(n, 100)); // sample nhiều hơn nếu cần
+        // Nếu tên ít hơn điểm, lặp lại điểm trung tâm để trái tim đầy hơn
+        const pts = [];
+        // để phân bổ, ta lấy các điểm ở phần "trong" trái tim: lấy những điểm với t từ 0..2pi, nhưng sắp xếp sao cho khi hiển thị đều
+        for(let i=0;i<n;i++){
+            pts.push(positions[Math.floor((i/n)*positions.length)]);
+        }
 
-<!--        // Tạo phần tử tên cho mỗi tên-->
-<!--        const els = names.map((nm,i)=>{-->
-<!--            const e = document.createElement('div');-->
-<!--            e.className = 'name';-->
-<!--            e.textContent = nm.trim();-->
-<!--            stage.appendChild(e);-->
-<!--            return e;-->
-<!--        });-->
+        // Tạo phần tử tên cho mỗi tên
+        const els = names.map((nm,i)=>{
+            const e = document.createElement('div');
+            e.className = 'name';
+            e.textContent = nm.trim();
+            stage.appendChild(e);
+            return e;
+        });
 
-<!--        // Ban đầu đặt các phần tử ở tâm, ẩn-->
-<!--        const centerX = stage.clientWidth/2, centerY = stage.clientHeight/2;-->
-<!--        els.forEach(el=>{-->
-<!--            el.style.left = (centerX) + 'px';-->
-<!--            el.style.top = (centerY) + 'px';-->
-<!--            el.style.transform = 'translate(-50%,-50%) scale(.75) rotate(0.01deg)';-->
-<!--        });-->
+        // Ban đầu đặt các phần tử ở tâm, ẩn
+        const centerX = stage.clientWidth/2, centerY = stage.clientHeight/2;
+        els.forEach(el=>{
+            el.style.left = (centerX) + 'px';
+            el.style.top = (centerY) + 'px';
+            el.style.transform = 'translate(-50%,-50%) scale(.75) rotate(0.01deg)';
+        });
 
-<!--        // Lần lượt hiện từng tên và di chuyển tới vị trí trái tim-->
-<!--        let i = 0;-->
-<!--        const showQueue = () => {-->
-<!--            if(i >= els.length) return;-->
-<!--            const el = els[i];-->
-<!--            const pos = pts[i % pts.length];-->
-<!--            // Thiết lập vị trí mục tiêu và animation-->
-<!--            // Delay nhỏ ngẫu nhiên để tránh quá "cứng"-->
-<!--            setTimeout(()=>{-->
-<!--                // Slight random jitter for natural look-->
-<!--                const jitterX = (Math.random()-0.5)*8;-->
-<!--                const jitterY = (Math.random()-0.5)*8;-->
-<!--                el.style.left = (pos.left + jitterX) + 'px';-->
-<!--                el.style.top = (pos.top + jitterY) + 'px';-->
-<!--                el.style.transform = 'translate(-50%,-50%) scale(1) rotate(' + ((Math.random()-0.5)*6) + 'deg)';-->
-<!--                el.classList.add('show');-->
-<!--            }, 20);-->
-<!--            i++;-->
-<!--            setTimeout(showQueue, delay);-->
-<!--        };-->
+        // Lần lượt hiện từng tên và di chuyển tới vị trí trái tim
+        let i = 0;
+        const showQueue = () => {
+            if(i >= els.length) return;
+            const el = els[i];
+            const pos = pts[i % pts.length];
+            // Thiết lập vị trí mục tiêu và animation
+            // Delay nhỏ ngẫu nhiên để tránh quá "cứng"
+            setTimeout(()=>{
+                // Slight random jitter for natural look
+                const jitterX = (Math.random()-0.5)*8;
+                const jitterY = (Math.random()-0.5)*8;
+                el.style.left = (pos.left + jitterX) + 'px';
+                el.style.top = (pos.top + jitterY) + 'px';
+                el.style.transform = 'translate(-50%,-50%) scale(1) rotate(' + ((Math.random()-0.5)*6) + 'deg)';
+                el.classList.add('show');
+            }, 20);
+            i++;
+            setTimeout(showQueue, delay);
+        };
 
-<!--        // Sau khi tất cả hiện xong, chúng ta có thể thêm hiệu ứng "đầy" trái tim:-->
-<!--        setTimeout(()=>{-->
-<!--            // nếu muốn, sắp xếp lại để tạo form dày hơn: dồn các tên vào giữa đường viền tim-->
-<!--            // Hiệu ứng: pulsing nhẹ-->
-<!--            stage.animate([-->
-<!--                { transform: 'scale(1)' },-->
-<!--                { transform: 'scale(1.03)' },-->
-<!--                { transform: 'scale(1)' }-->
-<!--            ], { duration: 1200, iterations: 2 });-->
-<!--        }, delay * n + 400);-->
+        // Sau khi tất cả hiện xong, chúng ta có thể thêm hiệu ứng "đầy" trái tim:
+        setTimeout(()=>{
+            // nếu muốn, sắp xếp lại để tạo form dày hơn: dồn các tên vào giữa đường viền tim
+            // Hiệu ứng: pulsing nhẹ
+            stage.animate([
+                { transform: 'scale(1)' },
+                { transform: 'scale(1.03)' },
+                { transform: 'scale(1)' }
+            ], { duration: 1200, iterations: 2 });
+        }, delay * n + 400);
 
-<!--        showQueue();-->
-<!--    }-->
+        showQueue();
+    }
 
-<!--    // Khi window resize: nếu đang hiển thị, tái layout-->
-<!--    let currentNames = [];-->
-<!--    window.addEventListener('resize', ()=>{-->
-<!--        if(currentNames.length) {-->
-<!--            // Re-render positions while preserving visibility-->
-<!--            const visible = currentNames;-->
-<!--            // small debounce:-->
-<!--            clearTimeout(window._retimeout);-->
-<!--            window._retimeout = setTimeout(()=> showNames(visible, parseInt(delayInput.value||180)), 120);-->
-<!--        }-->
-<!--    });-->
+    // Khi window resize: nếu đang hiển thị, tái layout
+    let currentNames = [];
+    window.addEventListener('resize', ()=>{
+        if(currentNames.length) {
+            // Re-render positions while preserving visibility
+            const visible = currentNames;
+            // small debounce:
+            clearTimeout(window._retimeout);
+            window._retimeout = setTimeout(()=> showNames(visible, parseInt(delayInput.value||180)), 120);
+        }
+    });
 
-<!--    // Bắt đầu khi nhấn nút-->
-<!--    startBtn.addEventListener('click', ()=>{-->
-<!--        const raw = namesInput.value.trim();-->
-<!--        if(!raw) return;-->
-<!--        const arr = raw.split(',').map(s=>s.trim()).filter(Boolean);-->
-<!--        // Nếu danh sách quá ngắn, nhân bản để đầy trái tim-->
-<!--        let names = arr.slice();-->
-<!--        if(names.length < 12){-->
-<!--            // nhân bản vòng quanh để có ít nhất 12-->
-<!--            while(names.length < 12){-->
-<!--                names = names.concat(arr);-->
-<!--            }-->
-<!--        }-->
-<!--        currentNames = names;-->
-<!--        const delay = Math.max(40, parseInt(delayInput.value) || 180);-->
-<!--        showNames(names, delay);-->
-<!--    });-->
+    // Bắt đầu khi nhấn nút
+    startBtn.addEventListener('click', ()=>{
+        const raw = namesInput.value.trim();
+        if(!raw) return;
+        const arr = raw.split(',').map(s=>s.trim()).filter(Boolean);
+        // Nếu danh sách quá ngắn, nhân bản để đầy trái tim
+        let names = arr.slice();
+        if(names.length < 12){
+            // nhân bản vòng quanh để có ít nhất 12
+            while(names.length < 12){
+                names = names.concat(arr);
+            }
+        }
+        currentNames = names;
+        const delay = Math.max(40, parseInt(delayInput.value) || 180);
+        showNames(names, delay);
+    });
 
-<!--    // Tự chạy lần đầu với danh sách mặc định-->
-<!--    window.addEventListener('load', ()=> startBtn.click());-->
-<!--</script>-->
-<!--</body>-->
-<!--</html>-->
+    // Tự chạy lần đầu với danh sách mặc định
+    window.addEventListener('load', ()=> startBtn.click());
+</script>
+</body>
+</html>
