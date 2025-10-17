@@ -1,108 +1,444 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trái Tim</title>
+    <title>Trai Tim 20-10</title>
     <style>
+        html,
         body {
+            height: 100%;
+            padding: 0;
             margin: 0;
-            height: 100vh;
-            background: radial-gradient(circle at center, #0a0a0a, #000);
+            background: #000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
         }
-        .heart-container {
+
+        .box {
+            width: 100%;
             position: relative;
-            width: 400px;
-            height: 400px;
-            transform: scale(1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #pinkboard {
+            position: relative;
+            margin: 20px auto;
+            height: 500px;
+            width: 500px;
+            animation: animate 1.3s infinite;
+            z-index: 2;
+        }
+
+        #pinkboard:before,
+        #pinkboard:after {
+            content: '';
+            position: absolute;
+            background: #FF5CA4;
+            width: 100px;
+            height: 160px;
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
+        }
+
+        #pinkboard:before {
+            left: 100px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        #pinkboard:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        @keyframes animate {
+            0% { transform: scale(1); }
+            30% { transform: scale(.8); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* PHẦN MỚI - TÊN BAY LÊN LIÊN TỤC */
+        .names-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
         .name {
             position: absolute;
             color: #ff4da6;
             font-weight: bold;
             font-size: 18px;
             opacity: 0;
-            animation: appear 0.5s forwards;
             text-shadow: 0 0 15px #ff66cc, 0 0 30px #ff99cc;
+            pointer-events: none;
+            animation: flyUp 3s ease-out forwards;
         }
-        @keyframes appear {
-            to { opacity: 1; }
+
+        @keyframes flyUp {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0.5);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(1.2);
+            }
         }
-        .start-btn {
+
+        .center-text {
+            background-color: rgb(0, 0, 0);
+            width: 100%;
+            color: rgb(225, 12, 168);
+            height: 80px;
+            font-size: 31px;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 4;
+            margin-top: 20px;
+        }
+
+        /* Ngày 20/10 đặc biệt */
+        .special-day {
             position: absolute;
-            bottom: 40px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #ff4da6;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 18px;
-            box-shadow: 0 0 15px #ff99cc;
-            transition: 0.3s;
+            color: #FF1493;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 20px #FF1493;
+            animation: glow 2s ease-in-out infinite alternate;
+            z-index: 5;
         }
-        .start-btn:hover {
-            background: #ff66b2;
-            box-shadow: 0 0 25px #ff99cc;
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #FF1493; }
+            to { text-shadow: 0 0 20px #FF1493, 0 0 30px #FF1493; }
         }
     </style>
 </head>
 <body>
-<div class="heart-container" id="heart"></div>
-<button class="start-btn" onclick="startAnimation()">Bắt đầu</button>
+<div class="special-day" id="specialDay" style="display: none;">
+    🎉 NGÀY 20-10 - CHÚC MỪNG CÁC EM! 🎉
+</div>
+
+<div class="box">
+    <canvas id="pinkboard"></canvas>
+    <div class="names-container" id="namesContainer"></div>
+</div>
+
+<div class="center-text">
+    Anh Yêu Em
+</div>
 
 <script>
+    // DANH SÁCH TÊN CÁC BẠN NỮ
     const names = [
-        "THẢO NGUYÊN", "MỸ TUYỀN", "THẢO MY", "ĐÀ GIANG", "KIM NGÂN", "ÁNH DƯƠNG",
-        "QUỲNH CHI", "PHÚC AN", "BẢO CHÂU",
+        "THẢO NGUYÊN", "MỸ TUYỀN", "THẢO MY", "ĐÀ GIANG", "KIM NGÂN",
+        "ÁNH DƯƠNG", "QUỲNH CHI", "PHÚC AN", "BẢO CHÂU",
+        "NGỌC HÀ", "MINH THƯ", "LAN ANH", "TRÂM", "HỒNG NHUNG"
     ];
 
+    // KIỂM TRA NGÀY 20/10
+    function checkDate() {
+        const today = new Date();
+        const day = today.getDate();
+        const month = today.getMonth() + 1;
+
+        if (day === 20 && month === 10) {
+            document.getElementById('specialDay').style.display = 'block';
+            startFlyingNames();
+        } else {
+            startFlyingNames(); // Vẫn chạy tên bình thường
+        }
+    }
+
+    // HÀM TÊN BAY LÊN
     function heartShape(t) {
         const x = 16 * Math.pow(Math.sin(t), 3);
         const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
         return [x, y];
     }
 
-    function startAnimation() {
-        const container = document.getElementById("heart");
-        container.innerHTML = "";
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i >= names.length) {
-                clearInterval(interval);
-                pulseEffect();
-                return;
-            }
-            const angle = (Math.PI * 2 * i) / names.length;
+    function startFlyingNames() {
+        const container = document.getElementById("namesContainer");
+
+        function createName() {
+            const name = names[Math.floor(Math.random() * names.length)];
+            const angle = Math.PI * 2 * Math.random();
             const [x, y] = heartShape(angle);
+
             const nameEl = document.createElement("div");
             nameEl.className = "name";
-            nameEl.textContent = names[i];
-            nameEl.style.left = 200 + x * 12 + "px";
-            nameEl.style.top = 200 - y * 12 + "px";
-            nameEl.style.animationDelay = i * 0.1 + "s";
+            nameEl.textContent = name;
+            nameEl.style.left = `calc(50% + ${x * 12}px)`;
+            nameEl.style.top = `calc(50% + ${y * 12}px)`;
+            nameEl.style.animationDelay = "0s";
+
             container.appendChild(nameEl);
-            i++;
-        }, 300);
+
+            // Xóa sau khi animation kết thúc
+            setTimeout(() => {
+                if (nameEl.parentNode) {
+                    nameEl.parentNode.removeChild(nameEl);
+                }
+            }, 3000);
+        }
+
+        // Tạo tên liên tục
+        setInterval(createName, 800); // Mỗi 0.8 giây 1 tên
+        createName(); // Tên đầu tiên ngay lập tức
     }
 
-    function pulseEffect() {
-        const heart = document.getElementById("heart");
-        let scale = 1;
-        let growing = true;
-        setInterval(() => {
-            scale = growing ? scale + 0.01 : scale - 0.01;
-            if (scale >= 1.1) growing = false;
-            if (scale <= 1.0) growing = true;
-            heart.style.transform = `scale(${scale})`;
-        }, 50);
-    }
+    /*
+     * Settings - TRÁI TIM PARTICLE
+     */
+    var settings = {
+        particles: {
+            length: 2000,
+            duration: 2,
+            velocity: 100,
+            effect: -1.3,
+            size: 13,
+        },
+    };
+
+    /* RequestAnimationFrame polyfill */
+    (function() {
+        var b = 0;
+        var c = ["ms", "moz", "webkit", "o"];
+        for (var a = 0; a < c.length && !window.requestAnimationFrame; ++a) {
+            window.requestAnimationFrame = window[c[a] + "RequestAnimationFrame"];
+            window.cancelAnimationFrame = window[c[a] + "CancelAnimationFrame"] || window[c[a] + "CancelRequestAnimationFrame"]
+        }
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(h, e) {
+                var d = new Date().getTime();
+                var f = Math.max(0, 16 - (d - b));
+                var g = window.setTimeout(function() {
+                    h(d + f)
+                }, f);
+                b = d + f;
+                return g
+            }
+        }
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function(d) {
+                clearTimeout(d)
+            }
+        }
+    })();
+
+    /* Point class */
+    var Point = (function() {
+        function Point(x, y) {
+            this.x = (typeof x !== 'undefined') ? x : 0;
+            this.y = (typeof y !== 'undefined') ? y : 0;
+        }
+        Point.prototype.clone = function() {
+            return new Point(this.x, this.y);
+        };
+        Point.prototype.length = function(length) {
+            if (typeof length == 'undefined')
+                return Math.sqrt(this.x * this.x + this.y * this.y);
+            this.normalize();
+            this.x *= length;
+            this.y *= length;
+            return this;
+        };
+        Point.prototype.normalize = function() {
+            var length = this.length();
+            this.x /= length;
+            this.y /= length;
+            return this;
+        };
+        return Point;
+    })();
+
+    /* Particle class */
+    var Particle = (function() {
+        function Particle() {
+            this.position = new Point();
+            this.velocity = new Point();
+            this.acceleration = new Point();
+            this.age = 0;
+        }
+        Particle.prototype.initialize = function(x, y, dx, dy) {
+            this.position.x = x;
+            this.position.y = y;
+            this.velocity.x = dx;
+            this.velocity.y = dy;
+            this.acceleration.x = dx * settings.particles.effect;
+            this.acceleration.y = dy * settings.particles.effect;
+            this.age = 0;
+        };
+        Particle.prototype.update = function(deltaTime) {
+            this.position.x += this.velocity.x * deltaTime;
+            this.position.y += this.velocity.y * deltaTime;
+            this.velocity.x += this.acceleration.x * deltaTime;
+            this.velocity.y += this.acceleration.y * deltaTime;
+            this.age += deltaTime;
+        };
+        Particle.prototype.draw = function(context, image) {
+            function ease(t) {
+                return (--t) * t * t + 1;
+            }
+            var size = image.width * ease(this.age / settings.particles.duration);
+            context.globalAlpha = 1 - this.age / settings.particles.duration;
+            context.drawImage(image, this.position.x - size / 2, this.position.y - size / 2, size, size);
+        };
+        return Particle;
+    })();
+
+    /* ParticlePool class */
+    var ParticlePool = (function() {
+        var particles, firstActive = 0, firstFree = 0, duration = settings.particles.duration;
+
+        function ParticlePool(length) {
+            particles = new Array(length);
+            for (var i = 0; i < particles.length; i++)
+                particles[i] = new Particle();
+        }
+        ParticlePool.prototype.add = function(x, y, dx, dy) {
+            particles[firstFree].initialize(x, y, dx, dy);
+            firstFree++;
+            if (firstFree == particles.length) firstFree = 0;
+            if (firstActive == firstFree) firstActive++;
+            if (firstActive == particles.length) firstActive = 0;
+        };
+        ParticlePool.prototype.update = function(deltaTime) {
+            var i;
+            if (firstActive < firstFree) {
+                for (i = firstActive; i < firstFree; i++)
+                    particles[i].update(deltaTime);
+            }
+            if (firstFree < firstActive) {
+                for (i = firstActive; i < particles.length; i++)
+                    particles[i].update(deltaTime);
+                for (i = 0; i < firstFree; i++)
+                    particles[i].update(deltaTime);
+            }
+            while (particles[firstActive].age >= duration && firstActive != firstFree) {
+                firstActive++;
+                if (firstActive == particles.length) firstActive = 0;
+            }
+        };
+        ParticlePool.prototype.draw = function(context, image) {
+            var i;
+            if (firstActive < firstFree) {
+                for (i = firstActive; i < firstFree; i++)
+                    particles[i].draw(context, image);
+            }
+            if (firstFree < firstActive) {
+                for (i = firstActive; i < particles.length; i++)
+                    particles[i].draw(context, image);
+                for (i = 0; i < firstFree; i++)
+                    particles[i].draw(context, image);
+            }
+        };
+        return ParticlePool;
+    })();
+
+    /* TRÁI TIM PARTICLE RENDER */
+    (function(canvas) {
+        var context = canvas.getContext('2d'),
+            particles = new ParticlePool(settings.particles.length),
+            particleRate = settings.particles.length / settings.particles.duration,
+            time;
+
+        function pointOnHeart(t) {
+            return new Point(
+                160 * Math.pow(Math.sin(t), 3),
+                130 * Math.cos(t) - 50 * Math.cos(2 * t) - 20 * Math.cos(3 * t) - 10 * Math.cos(4 * t) + 25
+            );
+        }
+
+        var image = (function() {
+            var canvas = document.createElement('canvas'),
+                context = canvas.getContext('2d');
+            canvas.width = settings.particles.size;
+            canvas.height = settings.particles.size;
+            function to(t) {
+                var point = pointOnHeart(t);
+                point.x = settings.particles.size / 2 + point.x * settings.particles.size / 350;
+                point.y = settings.particles.size / 2 - point.y * settings.particles.size / 350;
+                return point;
+            }
+            context.beginPath();
+            var t = -Math.PI;
+            var point = to(t);
+            context.moveTo(point.x, point.y);
+            while (t < Math.PI) {
+                t += 0.01;
+                point = to(t);
+                context.lineTo(point.x, point.y);
+            }
+            context.closePath();
+            context.fillStyle = '#FF5CA4';
+            context.fill();
+            var image = new Image();
+            image.src = canvas.toDataURL();
+            return image;
+        })();
+
+        function render() {
+            requestAnimationFrame(render);
+            var newTime = new Date().getTime() / 1000,
+                deltaTime = newTime - (time || newTime);
+            time = newTime;
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            var amount = particleRate * deltaTime;
+            for (var i = 0; i < amount; i++) {
+                var pos = pointOnHeart(Math.PI - 2 * Math.PI * Math.random());
+                var dir = pos.clone().length(settings.particles.velocity);
+                particles.add(canvas.width / 2 + pos.x, canvas.height / 2 - pos.y, dir.x, -dir.y);
+            }
+
+            particles.update(deltaTime);
+            particles.draw(context, image);
+        }
+
+        function onResize() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+        window.onresize = onResize;
+
+        setTimeout(function() {
+            onResize();
+            render();
+        }, 10);
+    })(document.getElementById('pinkboard'));
+
+    // KHỞI ĐỘNG
+    checkDate();
 </script>
 </body>
 </html>
