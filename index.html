@@ -38,7 +38,7 @@
             position: absolute;
             color: #ff4da6;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 30px;
             opacity: 0;
             text-shadow: 0 0 15px #ff66cc, 0 0 30px #ff99cc;
             pointer-events: none;
@@ -61,18 +61,15 @@
         }
 
         .center-text {
-            background-color: rgb(0, 0, 0);
-            width: 100%;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
             color: rgb(225, 12, 168);
-            height: 80px;
-            font-size: 31px;
+            font-size: 45px;
             font-style: italic;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             text-align: center;
             z-index: 4;
-            margin-top: 20px;
         }
 
         /* Ngày 20/10 đặc biệt */
@@ -93,6 +90,78 @@
             from { text-shadow: 0 0 10px #FF1493; }
             to { text-shadow: 0 0 20px #FF1493, 0 0 30px #FF1493; }
         }
+
+        /* PHẦN QUÉT QR */
+        #qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1.5s ease;
+            z-index: 10;
+        }
+
+        #qr-section h1 {
+            color: #c2185b;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #qr-section img {
+            width: 200px;
+            height: 200px;
+            border: 4px solid #c2185b;
+            border-radius: 12px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        #qr-section button {
+            background-color: #c2185b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #qr-section button:hover {
+            background-color: #a3154d;
+        }
+
+        #scan-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1.5s ease;
+            z-index: 10;
+        }
+
+        #scan-section h1 {
+            color: #c2185b;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #reader {
+            width: 250px;
+            height: 250px;
+            margin-top: 20px;
+            border: 3px dashed #c2185b;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.7);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         html,
         body {
             height: 100%;
@@ -169,6 +238,18 @@
     </style>
 </head>
 <body>
+<!-- PHẦN QUÉT QR -->
+<div id="qr-section">
+    <h1>🌸 Quét mã QR để nhận lời chúc 20/10 🌸</h1>
+    <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?data=loichuc&size=200x200" alt="QR Code">
+    <button id="startBtn">Bắt đầu quét</button>
+</div>
+
+<div id="scan-section">
+    <h1>Đưa mã QR vào khung bên dưới 💗</h1>
+    <div id="reader"></div>
+</div>
+
 <div class="special-day" id="specialDay" style="display: none;">
     🎉 NGÀY 20-10 - CHÚC MỪNG CÁC EM! 🎉
 </div>
@@ -178,7 +259,11 @@
 </div>
 
 <div class="center-text">
-    Chúc các bạn nữ 20-10
+    Chúc các bạn nữ 20-10 vui vẻ
+</div>
+
+<div class="box">
+    <canvas id="pinkboard"></canvas>
 </div>
 
 <script>
@@ -186,7 +271,6 @@
     const names = [
         "THẢO NGUYÊN", "MỸ TUYỀN", "THẢO MY", "ĐÀ GIANG", "KIM NGÂN",
         "ÁNH DƯƠNG", "QUỲNH CHI", "PHÚC AN", "BẢO CHÂU",
-        "NGỌC HÀ", "MINH THƯ", "LAN ANH", "TRÂM", "HỒNG NHUNG"
     ];
 
     // KIỂM TRA NGÀY 20/10
@@ -221,8 +305,8 @@
             const nameEl = document.createElement("div");
             nameEl.className = "name";
             nameEl.textContent = name;
-            nameEl.style.left = `calc(50% + ${x * 12}px)`; // Vẫn giữ tâm giữa
-            nameEl.style.top = `calc(50% + ${y * 12}px)`; // Vẫn giữ tâm giữa
+            nameEl.style.left = `calc(50% + ${x * 12}px)`;
+            nameEl.style.top = `calc(50% + ${y * 12}px)`;
             nameEl.style.animationDelay = "0s";
 
             container.appendChild(nameEl);
@@ -236,27 +320,84 @@
         }
 
         // Tạo tên liên tục
-        setInterval(createName, 800); // Mỗi 0.8 giây 1 tên
+        setInterval(createName, 600);
         createName(); // Tên đầu tiên ngay lập tức
     }
 
+    // PHẦN QUÉT QR
+    const qrSection = document.getElementById('qr-section');
+    const scanSection = document.getElementById('scan-section');
+    const startBtn = document.getElementById('startBtn');
+    const readerDiv = document.getElementById('reader');
+    const qrImage = document.getElementById('qrImage');
+    let html5QrCode;
+
+    function createShareQr() {
+        const shareUrl = window.location.origin + window.location.pathname + '?q=loichuc';
+        const qrApi = 'https://api.qrserver.com/v1/create-qr-code/?data=' + encodeURIComponent(shareUrl) + '&size=200x200';
+        qrImage.src = qrApi;
+    }
+
+    function checkQueryShowGreeting() {
+        const params = new URLSearchParams(window.location.search);
+        if ((params.get('q') || '').trim().toLowerCase() === 'loichuc') {
+            qrSection.style.display = 'none';
+            scanSection.style.display = 'none';
+            document.getElementById('specialDay').style.display = 'block';
+            startFlyingNames();
+        }
+    }
+
+    startBtn.addEventListener('click', () => {
+        qrSection.style.display = 'none';
+        scanSection.style.display = 'flex';
+        startScan();
+    });
+
+    function startScan() {
+        html5QrCode = new Html5Qrcode("reader");
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                html5QrCode.start(
+                    devices[0].id,
+                    { fps: 10, qrbox: 200 },
+                    (decodedText) => {
+                        const text = (decodedText || '').trim().toLowerCase();
+                        if (text === "loichuc" || text === window.location.origin + window.location.pathname + '?q=loichuc') {
+                            html5QrCode.stop().then(() => {
+                                scanSection.style.display = 'none';
+                                document.getElementById('specialDay').style.display = 'block';
+                                startFlyingNames();
+                            }).catch(err => {
+                                scanSection.style.display = 'none';
+                                document.getElementById('specialDay').style.display = 'block';
+                                startFlyingNames();
+                            });
+                        }
+                    },
+                    () => {}
+                ).catch(err => console.error('Start camera failed:', err));
+            }
+        }).catch(err => console.log('getCameras error:', err));
+    }
+
     // KHỞI ĐỘNG
+    createShareQr();
+    checkQueryShowGreeting();
     checkDate();
 </script>
-<div class="box">
-    <canvas id="pinkboard"></canvas>
-</div>
+
 <script>
     /*
      * Settings
      */
     var settings = {
         particles: {
-            length: 2000, // maximum amount of particles
-            duration: 2, // particle duration in sec
-            velocity: 100, // particle velocity in pixels/sec
-            effect: -1.3, // play with this for a nice effect
-            size: 13, // particle size in pixels
+            length: 2000,
+            duration: 2,
+            velocity: 100,
+            effect: -1.3,
+            size: 13,
         },
     };
     /*
@@ -359,7 +500,6 @@
             duration = settings.particles.duration;
 
         function ParticlePool(length) {
-            // create and populate particle pool
             particles = new Array(length);
             for (var i = 0; i < particles.length; i++)
                 particles[i] = new Particle();
@@ -367,7 +507,6 @@
         ParticlePool.prototype.add = function(x, y, dx, dy) {
             particles[firstFree].initialize(x, y, dx, dy);
 
-            // handle circular queue
             firstFree++;
             if (firstFree == particles.length) firstFree = 0;
             if (firstActive == firstFree) firstActive++;
@@ -376,7 +515,6 @@
         ParticlePool.prototype.update = function(deltaTime) {
             var i;
 
-            // update active particles
             if (firstActive < firstFree) {
                 for (i = firstActive; i < firstFree; i++)
                     particles[i].update(deltaTime);
@@ -388,16 +526,14 @@
                     particles[i].update(deltaTime);
             }
 
-            // remove inactive particles
             while (particles[firstActive].age >= duration && firstActive != firstFree) {
                 firstActive++;
                 if (firstActive == particles.length) firstActive = 0;
             }
-
-
         };
         ParticlePool.prototype.draw = function(context, image) {
-            // draw active particles
+            var i;
+
             if (firstActive < firstFree) {
                 for (i = firstActive; i < firstFree; i++)
                     particles[i].draw(context, image);
@@ -417,10 +553,9 @@
     (function(canvas) {
         var context = canvas.getContext('2d'),
             particles = new ParticlePool(settings.particles.length),
-            particleRate = settings.particles.length / settings.particles.duration, // particles/sec
+            particleRate = settings.particles.length / settings.particles.duration,
             time;
 
-        // get point on heart with -PI <= t <= PI
         function pointOnHeart(t) {
             return new Point(
                 160 * Math.pow(Math.sin(t), 3),
@@ -428,53 +563,45 @@
             );
         }
 
-        // creating the particle image using a dummy canvas
         var image = (function() {
             var canvas = document.createElement('canvas'),
                 context = canvas.getContext('2d');
             canvas.width = settings.particles.size;
             canvas.height = settings.particles.size;
-            // helper function to create the path
+
             function to(t) {
                 var point = pointOnHeart(t);
                 point.x = settings.particles.size / 2 + point.x * settings.particles.size / 350;
                 point.y = settings.particles.size / 2 - point.y * settings.particles.size / 350;
                 return point;
             }
-            // create the path
+
             context.beginPath();
             var t = -Math.PI;
             var point = to(t);
             context.moveTo(point.x, point.y);
             while (t < Math.PI) {
-                t += 0.01; // baby steps!
+                t += 0.01;
                 point = to(t);
                 context.lineTo(point.x, point.y);
             }
             context.closePath();
-            // create the fill
             context.fillStyle = '#FF5CA4';
             context.fill();
-            // create the image
+
             var image = new Image();
             image.src = canvas.toDataURL();
             return image;
         })();
 
-        // render that thing!
         function render() {
-            // next animation frame
             requestAnimationFrame(render);
-
-            // update time
             var newTime = new Date().getTime() / 1000,
                 deltaTime = newTime - (time || newTime);
             time = newTime;
 
-            // clear canvas
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            // create new particles
             var amount = particleRate * deltaTime;
             for (var i = 0; i < amount; i++) {
                 var pos = pointOnHeart(Math.PI - 2 * Math.PI * Math.random());
@@ -482,24 +609,23 @@
                 particles.add(canvas.width / 2 + pos.x, canvas.height / 2 - pos.y, dir.x, -dir.y);
             }
 
-            // update and draw particles
             particles.update(deltaTime);
             particles.draw(context, image);
         }
 
-        // handle (re-)sizing of the canvas
         function onResize() {
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
         }
         window.onresize = onResize;
 
-        // delay rendering bootstrap
         setTimeout(function() {
             onResize();
             render();
         }, 10);
     })(document.getElementById('pinkboard'));
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 </script>
 </body>
 </html>
